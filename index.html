@@ -11,63 +11,39 @@
 <title>Life Plan — Command Center</title>
 <link rel="manifest" href="data:application/json;base64,ewogICJuYW1lIjogIkxpZmUgUGxhbiAtIENvbW1hbmQgQ2VudGVyIiwKICAic2hvcnRfbmFtZSI6ICJMaWZlIFBsYW4iLAogICJzdGFydF91cmwiOiAiLiIsCiAgImRpc3BsYXkiOiAic3RhbmRhbG9uZSIsCiAgImJhY2tncm91bmRfY29sb3IiOiAiIzA5MDkwYiIsCiAgInRoZW1lX2NvbG9yIjogIiMwOTA5MGIiLAogICJpY29ucyI6IFtdCn0=">
 <style>
-  *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
-  :root{--bg:#09090b;--s1:#18181b;--s2:#27272a;--s3:#3f3f46;--t1:#fafafa;--t2:#e4e4e7;--t3:#a1a1aa;--t4:#71717a;--t5:#52525b;--purple:#a855f7;--green:#4ade80;--orange:#f97316;--red:#ef4444;--yellow:#facc15;--blue:#60a5fa}
-  body{font-family:'SF Mono','Fira Code','JetBrains Mono','Menlo',monospace;background:var(--bg);color:var(--t2);min-height:100vh;min-height:100dvh;overflow-x:hidden;padding-bottom:env(safe-area-inset-bottom)}
-  input[type=number]::-webkit-inner-spin-button,input[type=number]::-webkit-outer-spin-button{-webkit-appearance:none;margin:0}
-  input[type=number]{-moz-appearance:textfield}
-  input{font-family:inherit}
-  button{font-family:inherit}
-  .header{background:linear-gradient(135deg,#09090b,#18181b 50%,#09090b);padding:max(env(safe-area-inset-top),24px) 16px 16px;border-bottom:1px solid var(--s2)}
-  .tabs{display:flex;border-bottom:1px solid var(--s2);background:#0a0a0a;position:sticky;top:0;z-index:20;overflow-x:auto;-webkit-overflow-scrolling:touch}
-  .tab{flex:1;padding:10px 4px;background:none;border:none;border-bottom:2px solid transparent;color:var(--t5);font-size:10px;text-align:center;cursor:pointer;min-width:56px;transition:all .15s}
-  .tab.active{border-bottom-color:var(--purple);color:var(--t2)}
-  .tab-icon{font-size:16px;margin-bottom:2px}
-  .content{padding:16px;max-width:600px;margin:0 auto}
-  .panel{background:var(--s1);border:1px solid var(--s2);border-radius:10px;padding:16px;margin-bottom:10px}
-  .metric-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:16px}
-  .metric{background:var(--s1);border:1px solid var(--s2);border-radius:10px;padding:14px}
-  .metric-label{font-size:9px;color:var(--t5);letter-spacing:2px;margin-bottom:6px}
-  .metric-val{font-size:20px;font-weight:800}
-  .metric-sub{font-size:10px;color:var(--t5)}
-  .section-head{margin-bottom:16px}
-  .section-title{font-size:18px;font-weight:800;color:var(--t1)}
-  .section-sub{font-size:11px;color:var(--t5);margin-top:2px}
-  .row{display:flex;justify-content:space-between;align-items:center;padding:6px 0;font-size:12px}
-  .row-label{color:var(--t3)}
-  .row-val{font-weight:700}
-  .editable{cursor:pointer;border-bottom:1px dashed rgba(255,255,255,.15);padding:2px 0}
-  .edit-input{background:var(--s2);border:1px solid var(--purple);border-radius:4px;color:var(--t2);font-size:13px;font-weight:700;padding:4px 8px;width:100px;outline:none;text-align:right}
-  .edit-input.large{font-size:18px}
-  .edit-input.text{text-align:left;width:auto;max-width:160px}
-  .total-bar{background:var(--s1);border:1px solid var(--s2);border-radius:8px;padding:12px 16px;display:flex;justify-content:space-between;align-items:center;margin-bottom:10px}
-  .total-label{font-size:12px;color:var(--t3);font-weight:600}
-  .total-val{font-size:16px;font-weight:800}
-  .add-btn{width:100%;padding:12px;background:transparent;border:1px dashed var(--s2);border-radius:8px;color:var(--t5);font-size:12px;cursor:pointer;margin-bottom:10px}
-  .toggle-row{display:flex;gap:6px;margin-bottom:16px}
-  .toggle-btn{flex:1;padding:10px;border-radius:6px;cursor:pointer;font-size:12px;font-weight:600;background:transparent;border:1px solid var(--s2);color:var(--t5);transition:all .15s}
-  .toggle-btn.active{background:var(--s2);border-color:var(--s3);color:var(--t1)}
-  .sched-row{display:flex;gap:8px;margin-bottom:6px}
-  .sched-time{width:44px;font-size:10px;color:var(--t5);text-align:right;padding-top:10px;font-weight:600;flex-shrink:0}
-  .sched-block{flex:1;border-radius:6px;padding:10px 12px;font-size:12px;line-height:1.4;border:1px solid}
-  .check-item{display:flex;gap:10px;padding:8px 0;cursor:pointer;transition:opacity .2s}
-  .checkbox{width:18px;height:18px;border-radius:4px;flex-shrink:0;margin-top:1px;display:flex;align-items:center;justify-content:center;font-size:10px;border:2px solid var(--s3)}
-  .checkbox.checked{background:rgba(168,85,247,.2);border-color:var(--purple);color:var(--purple)}
-  .check-text{font-size:12px;color:var(--t3);line-height:1.5}
-  .check-text.done{color:var(--t5);text-decoration:line-through}
-  .bar-chart{display:flex;gap:2px;height:32px;align-items:flex-end}
-  .bar{border-radius:2px 2px 0 0;transition:height .3s}
-  .tier-row{margin-bottom:12px}
-  .tier-label{display:flex;justify-content:space-between;font-size:12px;margin-bottom:4px}
-  .tier-track{background:var(--s1);border-radius:4px;height:6px;overflow:hidden}
-  .tier-fill{height:100%;border-radius:4px;transition:width .4s}
-  .debt-card{border-left:3px solid;margin-bottom:10px}
-  .priority-btn{background:var(--s2);border:none;color:var(--t3);border-radius:3px;cursor:pointer;padding:2px 6px;font-size:10px}
-  .remove-btn{background:none;border:none;color:var(--t5);cursor:pointer;font-size:16px;padding:4px}
-  .reset-btn{width:100%;padding:12px;background:var(--s1);border:1px solid var(--s2);border-radius:8px;color:var(--t5);font-size:12px;cursor:pointer;margin-top:8px}
-  .flag{font-size:10px;color:var(--red);margin-top:2px}
-  .spacer{height:60px}
-  @media(max-width:380px){.metric-val{font-size:17px}.tab{min-width:48px;font-size:9px}}
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+:root{--bg:#09090b;--s1:#18181b;--s2:#27272a;--s3:#3f3f46;--t1:#fafafa;--t2:#e4e4e7;--t3:#a1a1aa;--t4:#71717a;--t5:#52525b;--purple:#a855f7;--green:#4ade80;--orange:#f97316;--red:#ef4444;--yellow:#facc15;--blue:#60a5fa}
+body{font-family:'SF Mono','Fira Code','JetBrains Mono','Menlo',monospace;background:var(--bg);color:var(--t2);min-height:100dvh;overflow-x:hidden;padding-bottom:env(safe-area-inset-bottom)}
+input[type=number]::-webkit-inner-spin-button,input[type=number]::-webkit-outer-spin-button{-webkit-appearance:none}
+input[type=number]{-moz-appearance:textfield}input{font-family:inherit}button{font-family:inherit}
+.header{background:linear-gradient(135deg,#09090b,#18181b 50%,#09090b);padding:max(env(safe-area-inset-top),24px) 16px 16px;border-bottom:1px solid var(--s2)}
+.tabs{display:flex;border-bottom:1px solid var(--s2);background:#0a0a0a;position:sticky;top:0;z-index:20;overflow-x:auto;-webkit-overflow-scrolling:touch}
+.tab{flex:1;padding:10px 2px;background:none;border:none;border-bottom:2px solid transparent;color:var(--t5);font-size:9px;text-align:center;cursor:pointer;min-width:46px;transition:all .15s}
+.tab.active{border-bottom-color:var(--purple);color:var(--t2)}
+.tab-icon{font-size:15px;margin-bottom:1px}
+.content{padding:16px;max-width:600px;margin:0 auto}
+.P{background:var(--s1);border:1px solid var(--s2);border-radius:10px;padding:16px;margin-bottom:10px}
+.mg{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:16px}
+.M{background:var(--s1);border:1px solid var(--s2);border-radius:10px;padding:14px}
+.Ml{font-size:9px;color:var(--t5);letter-spacing:2px;margin-bottom:6px}
+.Mv{font-size:20px;font-weight:800}.Ms{font-size:10px;color:var(--t5)}
+.SH{margin-bottom:16px}.ST{font-size:18px;font-weight:800;color:var(--t1)}.SS{font-size:11px;color:var(--t5);margin-top:2px}
+.R{display:flex;justify-content:space-between;align-items:center;padding:6px 0;font-size:12px}
+.Rl{color:var(--t3)}.Rv{font-weight:700}
+.ed{cursor:pointer;border-bottom:1px dashed rgba(255,255,255,.15);padding:2px 0}
+.ei{background:var(--s2);border:1px solid var(--purple);border-radius:4px;color:var(--t2);font-size:13px;font-weight:700;padding:4px 8px;width:100px;outline:none;text-align:right}
+.ei.lg{font-size:18px}.ei.tx{text-align:left;width:auto;max-width:160px}
+.TB{background:var(--s1);border:1px solid var(--s2);border-radius:8px;padding:12px 16px;display:flex;justify-content:space-between;align-items:center;margin-bottom:10px}
+.ab{width:100%;padding:12px;background:transparent;border:1px dashed var(--s2);border-radius:8px;color:var(--t5);font-size:12px;cursor:pointer;margin-bottom:10px}
+.tr{display:flex;gap:6px;margin-bottom:16px}
+.tb{flex:1;padding:10px;border-radius:6px;cursor:pointer;font-size:12px;font-weight:600;background:transparent;border:1px solid var(--s2);color:var(--t5);transition:all .15s}
+.tb.on{background:var(--s2);border-color:var(--s3);color:var(--t1)}
+.pb{background:none;border:none;color:var(--t5);cursor:pointer;font-size:16px;padding:4px}
+.pay-btn{width:100%;padding:10px;margin-top:8px;border-radius:6px;border:1px solid var(--green);background:rgba(74,222,128,.08);color:var(--green);font-size:12px;font-weight:700;cursor:pointer;font-family:inherit}
+.pay-input{width:100%;padding:10px;margin-top:8px;border-radius:6px;border:1px solid var(--purple);background:var(--s2);color:var(--t2);font-size:16px;font-weight:700;font-family:inherit;outline:none;text-align:center}
+.paid-badge{display:inline-block;padding:3px 10px;border-radius:20px;font-size:10px;font-weight:800;letter-spacing:1px;background:rgba(74,222,128,.15);color:var(--green);border:1px solid rgba(74,222,128,.3)}
+.goal-bar{background:var(--s2);border-radius:4px;height:8px;overflow:hidden;margin-top:6px}
+.goal-fill{height:100%;border-radius:4px;transition:width .4s}
 </style>
 </head>
 <body>
@@ -77,205 +53,144 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.23.9/babel.min.js"></script>
 <script type="text/babel">
 const{useState,useEffect,useCallback,useRef}=React;
+const SK="life-plan-v2";
+const ld=()=>{try{const d=JSON.parse(localStorage.getItem(SK));if(d&&d.income)return d;const old=JSON.parse(localStorage.getItem("life-plan-v1"));if(old&&old.income)return old;return null}catch{return null}};
+const sv=(d)=>{try{localStorage.setItem(SK,JSON.stringify(d))}catch(e){console.error(e)}};
+const fmt=n=>Number(n).toLocaleString(undefined,{minimumFractionDigits:n%1?2:0,maximumFractionDigits:2});
+const today=new Date();
+const dayNames=["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"];
 
-const STORE_KEY="life-plan-v1";
-const load=()=>{try{return JSON.parse(localStorage.getItem(STORE_KEY))}catch{return null}};
-const persist=(d)=>{try{localStorage.setItem(STORE_KEY,JSON.stringify(d))}catch(e){console.error(e)}};
-
-const DEFAULTS={
-  income:[
-    {id:"w2",name:"W2 Job (after tax)",amount:3800},
-    {id:"side",name:"Side Jobs",amount:750},
-  ],
-  expenses:[
-    {id:"rent",name:"Rent",amount:2512.63},
-    {id:"rentfee",name:"Rent processing fee",amount:74.12,flag:"eliminate"},
-    {id:"electric",name:"FPL Electric",amount:78},
-    {id:"internet",name:"Fision Internet",amount:32},
-    {id:"food",name:"Food & Groceries",amount:200},
-    {id:"gas",name:"Gas",amount:75},
-  ],
+const DEF={
+  income:[{id:"w2",name:"W2 Job (after tax)",amount:3800},{id:"side",name:"Side Jobs",amount:750}],
+  expenses:[{id:"rent",name:"Rent",amount:2512.63},{id:"rentfee",name:"Rent CC fee",amount:74.12,flag:1},{id:"electric",name:"FPL Electric",amount:78},{id:"internet",name:"Fision Internet",amount:32},{id:"food",name:"Food & Groceries",amount:200},{id:"gas",name:"Gas",amount:75}],
   debts:[
-    {id:"savor",name:"Cap One Savor",last4:"2779",balance:40,apr:20,minPay:25,priority:1},
-    {id:"qs",name:"Cap One Quicksilver",last4:"0914",balance:363.61,apr:24,minPay:25,priority:2},
-    {id:"amex",name:"Amex Blue Biz Plus",last4:"32002",balance:1173.10,apr:22,minPay:43,priority:3},
-    {id:"venture",name:"Cap One Venture One",last4:"8715",balance:1374.54,apr:24,minPay:35,priority:4},
-    {id:"freedom",name:"Chase Freedom Unl.",last4:"3224",balance:1949.60,apr:25,minPay:40,priority:5},
-    {id:"sapphire",name:"Chase Sapphire Pref.",last4:"4520",balance:3682.49,apr:22,minPay:50,priority:6},
+    {id:"savor",name:"Cap One Savor",l4:"2779",bal:40,apr:20,min:25,pri:1},
+    {id:"qs",name:"Cap One Quicksilver",l4:"0914",bal:363.61,apr:24,min:25,pri:2},
+    {id:"amex",name:"Amex Blue Biz Plus",l4:"32002",bal:1173.10,apr:22,min:43,pri:3},
+    {id:"venture",name:"Cap One Venture One",l4:"8715",bal:1374.54,apr:24,min:35,pri:4},
+    {id:"freedom",name:"Chase Freedom Unl.",l4:"3224",bal:1949.60,apr:25,min:40,pri:5},
+    {id:"sapphire",name:"Chase Sapphire Pref.",l4:"4520",bal:3682.49,apr:22,min:50,pri:6},
   ],
-  cash:{checking:1534.53,ira:2651.70},
+  payments:[],
+  cash:{chk:1534.53,ira:2651.70},
   checks:{},
-  bonus:1900,
-  bonusCount:2,
+  goals:[
+    {id:"g1",name:"ByteBreak Clients",current:0,target:3,unit:"clients",color:"#a855f7"},
+    {id:"g2",name:"Monthly Biz Revenue",current:0,target:1500,unit:"$/mo",color:"#4ade80",prefix:"$"},
+    {id:"g3",name:"Etsy Products Listed",current:0,target:20,unit:"products",color:"#f97316"},
+    {id:"g4",name:"TikTok Videos Posted",current:0,target:60,unit:"videos",color:"#60a5fa"},
+    {id:"g5",name:"Emergency Fund",current:0,target:1000,unit:"$",color:"#facc15",prefix:"$"},
+    {id:"g6",name:"Gym Sessions (90 days)",current:0,target:48,unit:"sessions",color:"#4ade80"},
+    {id:"g7",name:"Cold Emails Sent",current:0,target:500,unit:"emails",color:"#ef4444"},
+  ],
+  bonus:1900,bc:2,
 };
 
-const TIERS=[
-  {label:"$50K",mo:4167,color:"#4ade80"},
-  {label:"$100K",mo:8333,color:"#facc15"},
-  {label:"$250K",mo:20833,color:"#f97316"},
-  {label:"$1M",mo:83333,color:"#ef4444"},
-];
+const TIERS=[{l:"$50K",mo:4167,c:"#4ade80"},{l:"$100K",mo:8333,c:"#facc15"},{l:"$250K",mo:20833,c:"#f97316"},{l:"$1M",mo:83333,c:"#ef4444"}];
 
 const SPRINTS=[
-  {week:"Week 1 (Now)",color:"#ef4444",label:"SETUP",tasks:[
-    "Pay off Savor ($40) — kill one card today",
-    "Switch rent from Sapphire to bank transfer",
-    "Set Yahoo app password in ByteBreak config.py",
-    "Write list of 50 businesses for cold outreach",
-    "Print daily schedule, tape to wall",
-  ]},
-  {week:"Weeks 2–4",color:"#f97316",label:"OUTREACH",tasks:[
-    "10 cold emails/day to local businesses",
-    "Follow up every email after 3 days",
-    "Pay off Quicksilver ($364)",
-    "Create first 3 Etsy digital products",
-    "Film first 5 TikTok videos",
-  ]},
-  {week:"Month 2",color:"#facc15",label:"FIRST $",tasks:[
-    "Sign ByteBreak client #1 ($500/mo)",
-    "10+ Etsy products listed with SEO",
-    "TikTok posting 2x/day consistently",
-    "Amex BBP balance 50%+ eliminated",
-    "Review & adjust daily schedule",
-  ]},
-  {week:"Month 3",color:"#4ade80",label:"MOMENTUM",tasks:[
-    "ByteBreak at 2–3 clients ($1K–1.5K/mo)",
-    "15–20 Etsy products live",
-    "60+ TikTok videos posted total",
-    "Amex eliminated, attack Venture One",
-    "Emergency fund started ($500 target)",
-  ]},
+  {week:"Week 1 (Now)",color:"#ef4444",label:"SETUP",tasks:["Pay off Savor ($40)","Switch rent to bank transfer","Set Yahoo app password in ByteBreak","List 50 businesses for outreach","Print & post daily schedule"]},
+  {week:"Weeks 2–4",color:"#f97316",label:"OUTREACH",tasks:["10 cold emails/day","Follow up every email after 3 days","Pay off Quicksilver ($364)","Create first 3 Etsy products","Film first 5 TikToks"]},
+  {week:"Month 2",color:"#facc15",label:"FIRST $",tasks:["Sign ByteBreak client #1","10+ Etsy products with SEO","TikTok 2x/day consistently","Amex BBP 50%+ eliminated","Review & adjust schedule"]},
+  {week:"Month 3",color:"#4ade80",label:"MOMENTUM",tasks:["ByteBreak 2–3 clients","15–20 Etsy products live","60+ TikTok videos total","Amex eliminated → Venture One","Emergency fund $500"]},
 ];
-
-const WD=[
-  {t:"6:00",a:"Wake — no phone 15 min",c:"routine"},
-  {t:"6:15",a:"Hydrate, stretch",c:"routine"},
-  {t:"6:30",a:"Gym (Mon/Tue/Thu/Fri)",c:"gym"},
-  {t:"7:45",a:"Shower + ready",c:"routine"},
-  {t:"8:15",a:"Breakfast + 3 priorities",c:"routine"},
-  {t:"8:30",a:"W2 Job",c:"work"},
-  {t:"5:00",a:"Commute home",c:"work"},
-  {t:"5:30",a:"Snack + decompress",c:"routine"},
-  {t:"5:45",a:"OUTREACH — emails, DMs, follow-ups",c:"biz"},
-  {t:"7:15",a:"BUILD — Etsy products, ByteBreak, content",c:"biz"},
-  {t:"8:45",a:"Review day, plan tomorrow",c:"biz"},
-  {t:"9:15",a:"Free time",c:"free"},
-  {t:"10:30",a:"Lights out",c:"routine"},
-];
-const WE=[
-  {t:"7:00",a:"Wake up",c:"routine"},
-  {t:"7:15",a:"Coffee + plan 3 outcomes",c:"routine"},
-  {t:"7:45",a:"Gym or active recovery",c:"gym"},
-  {t:"9:15",a:"Breakfast",c:"routine"},
-  {t:"9:30",a:"DEEP WORK — 3.5 hrs uninterrupted",c:"biz"},
-  {t:"1:00",a:"Lunch + break",c:"routine"},
-  {t:"2:00",a:"DEEP WORK 2 — outreach, TikTok, clients",c:"biz"},
-  {t:"5:00",a:"Done — rest of day is yours",c:"free"},
-];
-const SC={
-  routine:{bg:"#111827",bd:"#1f2937",tx:"#9ca3af"},
-  gym:{bg:"#052e16",bd:"#166534",tx:"#4ade80"},
-  work:{bg:"#0c1929",bd:"#1e3a5f",tx:"#60a5fa"},
-  biz:{bg:"#271207",bd:"#7c2d12",tx:"#fb923c"},
-  free:{bg:"#1a1625",bd:"#4c1d95",tx:"#a78bfa"},
-};
 
 const GYM={
-  info:{warmup:"1–2 sets × 8–12 reps",working:"1–3 sets × 6–10 reps",rest:"2–2:30 min between working sets"},
+  info:{wu:"1–2 × 8–12",wk:"1–3 × 6–10",rest:"2:00–2:30"},
   days:[
-    {id:"pushA",label:"Push A",color:"#ef4444",groups:[
-      {muscle:"Chest",exercises:["Incline Smith Machine","Incline Chest Fly","Seated Incline Press","DB Flat"]},
-      {muscle:"Shoulders",exercises:["Plate Loaded OHP","Cable Lateral Raises"]},
-      {muscle:"Triceps",exercises:["Straight Bar Pushdown (Last)"]},
-    ]},
-    {id:"pullA",label:"Pull A",color:"#60a5fa",groups:[
-      {muscle:"Back",exercises:["Pulldowns","Chest Supported Row (Wide Grip)","ISO High 2 Low Row","Chest Supported Neutral Grip Row (Inside Grip)"]},
-      {muscle:"Biceps",exercises:["Hammer Curl","Cable Curls"]},
-    ]},
-    {id:"legsA",label:"Legs A",color:"#4ade80",groups:[
-      {muscle:"Legs",exercises:["Squat","Leg Press","Leg Extension","Hyper Extension","Seated Hamstring Curl"]},
-    ]},
-    {id:"pushB",label:"Push B",color:"#f97316",groups:[
-      {muscle:"Chest",exercises:["Incline DB","Seated Incline Chest Press","Chest Fly"]},
-      {muscle:"Shoulders",exercises:["Smith OHP","Seated DB Lateral Raises","Rear Delt DB"]},
-      {muscle:"Triceps",exercises:["Tricep Pushdown"]},
-    ]},
-    {id:"pullB",label:"Pull B",color:"#a78bfa",groups:[
-      {muscle:"Back",exercises:["Pull Downs","Seated Cable Row (High)","DB Row"]},
-      {muscle:"Biceps",exercises:["Cable Curls"]},
-    ]},
-    {id:"legsB",label:"Legs B",color:"#facc15",groups:[
-      {muscle:"Legs",exercises:["Laying Down Hamstring Curl","RDLs","ISO Standing Leg Curl","BSS","Leg Extension"]},
-    ]},
+    {id:"pushA",l:"Push A",c:"#ef4444",g:[{m:"Chest",e:["Incline Smith Machine","Incline Chest Fly","Seated Incline Press","DB Flat"]},{m:"Shoulders",e:["Plate Loaded OHP","Cable Lateral Raises"]},{m:"Triceps",e:["Straight Bar Pushdown"]}]},
+    {id:"pullA",l:"Pull A",c:"#60a5fa",g:[{m:"Back",e:["Pulldowns","Chest Supported Row (Wide)","ISO High 2 Low Row","Chest Supported Row (Neutral)"]},{m:"Biceps",e:["Hammer Curl","Cable Curls"]}]},
+    {id:"legsA",l:"Legs A",c:"#4ade80",g:[{m:"Legs",e:["Squat","Leg Press","Leg Extension","Hyper Extension","Seated Hamstring Curl"]}]},
+    {id:"pushB",l:"Push B",c:"#f97316",g:[{m:"Chest",e:["Incline DB","Seated Incline Chest Press","Chest Fly"]},{m:"Shoulders",e:["Smith OHP","Seated DB Lateral Raises","Rear Delt DB"]},{m:"Triceps",e:["Tricep Pushdown"]}]},
+    {id:"pullB",l:"Pull B",c:"#a78bfa",g:[{m:"Back",e:["Pull Downs","Seated Cable Row (High)","DB Row"]},{m:"Biceps",e:["Cable Curls"]}]},
+    {id:"legsB",l:"Legs B",c:"#facc15",g:[{m:"Legs",e:["Laying Hamstring Curl","RDLs","ISO Standing Leg Curl","BSS","Leg Extension"]}]},
   ]
 };
 
+const ROTATION=[
+  {day:"Monday",w:"Push A",c:"#ef4444",gi:0},{day:"Tuesday",w:"Pull A",c:"#60a5fa",gi:1},
+  {day:"Wednesday",w:"Rest / Business",c:"#52525b",gi:-1},{day:"Thursday",w:"Legs A",c:"#4ade80",gi:2},
+  {day:"Friday",w:"Push B",c:"#f97316",gi:3},{day:"Saturday",w:"Pull B",c:"#a78bfa",gi:4},
+  {day:"Sunday",w:"Legs B",c:"#facc15",gi:5},
+];
+
+const WD=[{t:"6:00",a:"Wake — no phone 15 min",c:"r"},{t:"6:15",a:"Hydrate, stretch",c:"r"},{t:"6:30",a:"Gym (Mon/Tue/Thu/Fri)",c:"g"},{t:"7:45",a:"Shower + ready",c:"r"},{t:"8:15",a:"Breakfast + 3 priorities",c:"r"},{t:"8:30",a:"W2 Job",c:"w"},{t:"5:00",a:"Commute home",c:"w"},{t:"5:30",a:"Snack + decompress",c:"r"},{t:"5:45",a:"OUTREACH — emails, DMs",c:"b"},{t:"7:15",a:"BUILD — products, content",c:"b"},{t:"8:45",a:"Review + plan tomorrow",c:"b"},{t:"9:15",a:"Free time",c:"f"},{t:"10:30",a:"Lights out",c:"r"}];
+const WE=[{t:"7:00",a:"Wake up",c:"r"},{t:"7:15",a:"Coffee + 3 outcomes",c:"r"},{t:"7:45",a:"Gym or recovery",c:"g"},{t:"9:15",a:"Breakfast",c:"r"},{t:"9:30",a:"DEEP WORK — 3.5 hrs",c:"b"},{t:"1:00",a:"Lunch + break",c:"r"},{t:"2:00",a:"DEEP WORK 2 — 3 hrs",c:"b"},{t:"5:00",a:"Done — your time",c:"f"}];
+const SC={r:{bg:"#111827",bd:"#1f2937",tx:"#9ca3af"},g:{bg:"#052e16",bd:"#166534",tx:"#4ade80"},w:{bg:"#0c1929",bd:"#1e3a5f",tx:"#60a5fa"},b:{bg:"#271207",bd:"#7c2d12",tx:"#fb923c"},f:{bg:"#1a1625",bd:"#4c1d95",tx:"#a78bfa"}};
+
 function sim(debts,surplus){
-  let cards=debts.map(c=>({...c,rem:c.balance})).sort((a,b)=>a.priority-b.priority);
-  let months=[],tot=cards.reduce((s,c)=>s+c.rem,0);const st=tot;
+  let cards=debts.map(c=>({...c,rem:c.bal})).sort((a,b)=>a.pri-b.pri);
+  let months=[],tot=cards.reduce((s,c)=>s+c.rem,0);const st=tot||1;
   for(let m=0;m<24&&tot>0.5;m++){
     let av=surplus;
-    cards.forEach(c=>{if(c.rem>0){let mp=Math.min(c.minPay,c.rem);c.rem=Math.max(0,c.rem-mp);c.rem*=(1+c.apr/100/12);av-=mp}});
-    cards.filter(c=>c.rem>0).sort((a,b)=>a.priority-b.priority).forEach(c=>{if(av>0){let x=Math.min(av,c.rem);c.rem=Math.max(0,c.rem-x);av-=x}});
+    cards.forEach(c=>{if(c.rem>0){let mp=Math.min(c.min,c.rem);c.rem=Math.max(0,c.rem-mp);c.rem*=(1+c.apr/100/12);av-=mp}});
+    cards.filter(c=>c.rem>0).sort((a,b)=>a.pri-b.pri).forEach(c=>{if(av>0){let x=Math.min(av,c.rem);c.rem=Math.max(0,c.rem-x);av-=x}});
     tot=cards.reduce((s,c)=>s+Math.max(0,c.rem),0);
     months.push({mo:m+1,rem:Math.round(tot),pct:Math.round(((st-tot)/st)*100)});
-  }
-  return months;
+  }return months;
 }
 
-const fmt=n=>Number(n).toLocaleString(undefined,{minimumFractionDigits:n%1?2:0,maximumFractionDigits:2});
-
-function EditNum({value,onSave,prefix="",suffix="",color="#e4e4e7",large=false}){
+function EN({value,onSave,prefix="",suffix="",color="#e4e4e7",large=false}){
   const[ed,setEd]=useState(false),[tmp,setTmp]=useState(String(value));const ref=useRef();
   useEffect(()=>{if(ed&&ref.current){ref.current.focus();ref.current.select()}},[ed]);
   if(ed)return <input ref={ref} type="number" inputMode="decimal" value={tmp} onChange={e=>setTmp(e.target.value)}
-    onBlur={()=>{onSave(parseFloat(tmp)||0);setEd(false)}}
-    onKeyDown={e=>{if(e.key==="Enter"){onSave(parseFloat(tmp)||0);setEd(false)}if(e.key==="Escape")setEd(false)}}
-    className={`edit-input${large?" large":""}`} style={{color}} />;
-  return <span onClick={()=>{setTmp(String(value));setEd(true)}} className="editable"
-    style={{color,fontWeight:700,fontSize:large?"18px":"13px"}}>{prefix}{fmt(value)}{suffix}</span>;
+    onBlur={()=>{onSave(parseFloat(tmp)||0);setEd(false)}} onKeyDown={e=>{if(e.key==="Enter"){onSave(parseFloat(tmp)||0);setEd(false)}if(e.key==="Escape")setEd(false)}}
+    className={`ei${large?" lg":""}`} style={{color}}/>;
+  return <span onClick={()=>{setTmp(String(value));setEd(true)}} className="ed" style={{color,fontWeight:700,fontSize:large?"18px":"13px"}}>{prefix}{fmt(value)}{suffix}</span>;
 }
-
-function EditText({value,onSave,style={}}){
+function ET({value,onSave,style={}}){
   const[ed,setEd]=useState(false),[tmp,setTmp]=useState(value);const ref=useRef();
   useEffect(()=>{if(ed&&ref.current){ref.current.focus();ref.current.select()}},[ed]);
-  if(ed)return <input ref={ref} value={tmp} onChange={e=>setTmp(e.target.value)}
-    onBlur={()=>{onSave(tmp);setEd(false)}}
-    onKeyDown={e=>{if(e.key==="Enter"){onSave(tmp);setEd(false)}if(e.key==="Escape")setEd(false)}}
-    className="edit-input text" style={{...style}} />;
-  return <span onClick={()=>{setTmp(value);setEd(true)}} className="editable" style={{...style}}>{value}</span>;
+  if(ed)return <input ref={ref} value={tmp} onChange={e=>setTmp(e.target.value)} onBlur={()=>{onSave(tmp);setEd(false)}} onKeyDown={e=>{if(e.key==="Enter"){onSave(tmp);setEd(false)}if(e.key==="Escape")setEd(false)}} className="ei tx" style={style}/>;
+  return <span onClick={()=>{setTmp(value);setEd(true)}} className="ed" style={style}>{value}</span>;
 }
 
 function App(){
-  const[data,setData]=useState(()=>load()||DEFAULTS);
+  const[data,setData]=useState(()=>{const d=ld();return d?{...DEF,...d,debts:d.debts||DEF.debts,goals:d.goals||DEF.goals,payments:d.payments||[]}:DEF});
   const[tab,setTab]=useState("dash");
   const[wd,setWd]=useState(true);
   const[gymDay,setGymDay]=useState(0);
+  const[payingCard,setPayingCard]=useState(null);
+  const[payAmt,setPayAmt]=useState("");
+  const payRef=useRef();
   const timer=useRef();
 
-  function up(fn){
-    setData(prev=>{const next=fn({...prev,income:[...prev.income],expenses:[...prev.expenses],debts:prev.debts.map(d=>({...d})),cash:{...prev.cash},checks:{...prev.checks}});
-      if(timer.current)clearTimeout(timer.current);
-      timer.current=setTimeout(()=>persist(next),300);
-      return next;
-    });
-  }
+  function up(fn){setData(prev=>{
+    const next=fn(JSON.parse(JSON.stringify(prev)));
+    if(timer.current)clearTimeout(timer.current);
+    timer.current=setTimeout(()=>sv(next),300);
+    return next;
+  })}
 
   const totI=data.income.reduce((s,i)=>s+i.amount,0);
   const totE=data.expenses.reduce((s,e)=>s+e.amount,0);
   const surplus=totI-totE;
-  const totD=data.debts.reduce((s,d)=>s+d.balance,0);
+  const totD=data.debts.reduce((s,d)=>s+d.bal,0);
+  const paidOff=data.debts.filter(d=>d.bal<=0).length;
   const payoff=sim(data.debts,Math.max(surplus,0));
   const dfm=payoff.find(m=>m.rem===0)?.mo||"24+";
+  const dow=today.getDay();
+  const todayWorkout=ROTATION[dow];
+  const totalPaid=data.payments.reduce((s,p)=>s+p.amt,0);
+
+  useEffect(()=>{if(payingCard&&payRef.current){payRef.current.focus()}},[payingCard]);
+
+  function logPayment(cardId){
+    const amt=parseFloat(payAmt);if(!amt||amt<=0)return;
+    up(d=>{
+      const card=d.debts.find(x=>x.id===cardId);
+      if(card){card.bal=Math.max(0,card.bal-amt);
+        d.payments.unshift({id:Date.now(),cardId,cardName:card.name,amt,date:new Date().toISOString().slice(0,10)});
+        if(d.payments.length>50)d.payments=d.payments.slice(0,50);
+      }return d;
+    });
+    setPayingCard(null);setPayAmt("");
+  }
 
   const tabs=[
-    {id:"dash",icon:"◉",label:"Dashboard"},
-    {id:"income",icon:"↑",label:"Income"},
-    {id:"expenses",icon:"↓",label:"Expenses"},
-    {id:"debt",icon:"⊘",label:"Debt"},
-    {id:"gym",icon:"⬡",label:"Gym"},
-    {id:"schedule",icon:"◷",label:"Schedule"},
-    {id:"sprint",icon:"▶",label:"Sprint"},
+    {id:"dash",icon:"◉",l:"Home"},{id:"goals",icon:"◎",l:"Goals"},{id:"income",icon:"↑",l:"Income"},
+    {id:"expenses",icon:"↓",l:"Expenses"},{id:"debt",icon:"⊘",l:"Debt"},{id:"gym",icon:"⬡",l:"Gym"},
+    {id:"schedule",icon:"◷",l:"Schedule"},{id:"sprint",icon:"▶",l:"Sprint"},
   ];
 
   return <>
@@ -284,330 +199,286 @@ function App(){
       <div style={{fontSize:22,fontWeight:800,color:"var(--t1)"}}>Command Center</div>
       <div style={{fontSize:11,color:"var(--t5)",marginTop:4}}>Tap any number to edit — saves automatically</div>
     </div>
-
-    <div className="tabs">
-      {tabs.map(t=><button key={t.id} className={`tab${tab===t.id?" active":""}`} onClick={()=>setTab(t.id)}>
-        <div className="tab-icon">{t.icon}</div>{t.label}
-      </button>)}
-    </div>
+    <div className="tabs">{tabs.map(t=><button key={t.id} className={`tab${tab===t.id?" active":""}`} onClick={()=>setTab(t.id)}><div className="tab-icon">{t.icon}</div>{t.l}</button>)}</div>
 
     <div className="content">
 
-      {tab==="dash"&&<>
-        <div className="metric-grid">
-          <div className="metric"><div className="metric-label">INCOME</div><div className="metric-val" style={{color:"var(--green)"}}>${fmt(totI)}<span className="metric-sub"> /mo</span></div></div>
-          <div className="metric"><div className="metric-label">EXPENSES</div><div className="metric-val" style={{color:"var(--orange)"}}>${fmt(totE)}<span className="metric-sub"> /mo</span></div></div>
-          <div className="metric"><div className="metric-label">SURPLUS</div><div className="metric-val" style={{color:surplus>=0?"var(--purple)":"var(--red)"}}>${fmt(surplus)}<span className="metric-sub"> /mo</span></div></div>
-          <div className="metric"><div className="metric-label">TOTAL DEBT</div><div className="metric-val" style={{color:"var(--red)"}}>${fmt(totD)}<span className="metric-sub"> {data.debts.length} cards</span></div></div>
-        </div>
+    {/* ===== DASHBOARD ===== */}
+    {tab==="dash"&&<>
+      <div className="mg">
+        <div className="M"><div className="Ml">INCOME</div><div className="Mv" style={{color:"var(--green)"}}>${fmt(totI)}<span className="Ms"> /mo</span></div></div>
+        <div className="M"><div className="Ml">SURPLUS</div><div className="Mv" style={{color:surplus>=0?"var(--purple)":"var(--red)"}}>${fmt(surplus)}<span className="Ms"> /mo</span></div></div>
+        <div className="M"><div className="Ml">TOTAL DEBT</div><div className="Mv" style={{color:totD>0?"var(--red)":"var(--green)"}}>${fmt(totD)}<span className="Ms"> {paidOff}/{data.debts.length} killed</span></div></div>
+        <div className="M"><div className="Ml">DEBT FREE IN</div><div className="Mv" style={{color:dfm==="24+"?"var(--red)":"var(--green)"}}>{dfm}<span className="Ms"> months</span></div></div>
+      </div>
 
-        <div className="panel">
-          <div style={{fontSize:11,color:"var(--t4)",letterSpacing:1,marginBottom:10}}>DEBT-FREE COUNTDOWN</div>
-          <div style={{display:"flex",alignItems:"baseline",gap:8,marginBottom:12}}>
-            <span style={{fontSize:36,fontWeight:800,color:dfm==="24+"?"var(--red)":"var(--green)"}}>{dfm}</span>
-            <span style={{fontSize:14,color:"var(--t4)"}}>months</span>
-          </div>
-          {payoff.length>0&&<div className="bar-chart">
-            {payoff.slice(0,18).map((m,i)=><div key={i} className="bar" style={{flex:1,background:m.rem===0?"var(--green)":"var(--purple)",height:`${Math.max(8,100-m.pct)}%`,opacity:m.rem===0?1:.6}}/>)}
-          </div>}
-          <div style={{display:"flex",justifyContent:"space-between",fontSize:10,color:"var(--t5)",marginTop:4}}>
-            <span>Now</span><span>{payoff.length>12?"18 mo":"12 mo"}</span>
-          </div>
-        </div>
+      <div className="P" style={{borderLeft:`3px solid ${todayWorkout.c}`}}>
+        <div style={{fontSize:10,color:"var(--t4)",letterSpacing:1,marginBottom:4}}>TODAY — {dayNames[dow].toUpperCase()}</div>
+        <div style={{fontSize:16,fontWeight:800,color:todayWorkout.c}}>{todayWorkout.w}</div>
+        {todayWorkout.gi>=0&&<div style={{fontSize:11,color:"var(--t4)",marginTop:4}}>
+          {GYM.days[todayWorkout.gi].g.map(g=>g.e.length).reduce((a,b)=>a+b,0)} exercises • Tap Gym tab to track
+        </div>}
+      </div>
 
-        <div className="panel">
-          <div style={{fontSize:11,color:"var(--t4)",letterSpacing:1,marginBottom:12}}>TIER PROGRESS</div>
-          {TIERS.map((t,i)=>{const pct=Math.min(100,(totI/t.mo)*100);const active=totI>=t.mo;return(
-            <div key={i} className="tier-row">
-              <div className="tier-label">
-                <span style={{color:active?t.color:"var(--t5)",fontWeight:active?700:400}}>{active?"✓ ":""}{t.label}/yr</span>
-                <span style={{color:"var(--t4)"}}>${fmt(t.mo)}/mo</span>
-              </div>
-              <div className="tier-track"><div className="tier-fill" style={{width:`${pct}%`,background:t.color}}/></div>
+      <div className="P">
+        <div style={{fontSize:11,color:"var(--t4)",letterSpacing:1,marginBottom:10}}>DEBT PAYOFF</div>
+        {payoff.length>0&&<div style={{display:"flex",gap:2,height:32,alignItems:"flex-end"}}>
+          {payoff.slice(0,18).map((m,i)=><div key={i} style={{flex:1,background:m.rem===0?"var(--green)":"var(--purple)",height:`${Math.max(8,100-m.pct)}%`,borderRadius:"2px 2px 0 0",opacity:m.rem===0?1:.6}}/>)}
+        </div>}
+        <div style={{display:"flex",justifyContent:"space-between",fontSize:10,color:"var(--t5)",marginTop:4}}><span>Now</span><span>18 mo</span></div>
+      </div>
+
+      <div className="P">
+        <div style={{fontSize:11,color:"var(--t4)",letterSpacing:1,marginBottom:10}}>TIER PROGRESS</div>
+        {TIERS.map((t,i)=>{const pct=Math.min(100,(totI/t.mo)*100);const on=totI>=t.mo;return(
+          <div key={i} style={{marginBottom:10}}>
+            <div style={{display:"flex",justifyContent:"space-between",fontSize:12,marginBottom:4}}>
+              <span style={{color:on?t.c:"var(--t5)",fontWeight:on?700:400}}>{on?"✓ ":""}{t.l}/yr</span>
+              <span style={{color:"var(--t4)"}}>${fmt(t.mo)}/mo</span>
             </div>
-          )})}
-        </div>
-
-        <div className="panel">
-          <div style={{fontSize:11,color:"var(--t4)",letterSpacing:1,marginBottom:10}}>CASH POSITIONS</div>
-          <div className="row"><span className="row-label">Checking</span>
-            <EditNum value={data.cash.checking} prefix="$" onSave={v=>up(d=>{d.cash.checking=v;return d})} /></div>
-          <div className="row"><span className="row-label">IRA (don't touch)</span>
-            <EditNum value={data.cash.ira} prefix="$" onSave={v=>up(d=>{d.cash.ira=v;return d})} /></div>
-          <div style={{borderTop:"1px solid var(--s2)",marginTop:8,paddingTop:8}} className="row">
-            <span className="row-label">Liquid cash</span>
-            <span style={{fontWeight:700,color:"var(--t1)"}}>${fmt(data.cash.checking)}</span>
-          </div>
-        </div>
-
-        <div className="panel">
-          <div style={{fontSize:11,color:"var(--t4)",letterSpacing:1,marginBottom:10}}>ANNUAL PROJECTION</div>
-          <div className="row"><span className="row-label">Monthly × 12</span><span style={{color:"var(--green)"}}>${fmt(totI*12)}</span></div>
-          <div className="row"><span className="row-label">+ Bonus paychecks</span><span style={{color:"var(--green)"}}>+${fmt(data.bonus*data.bonusCount)}</span></div>
-          <div style={{borderTop:"1px solid var(--s2)",marginTop:8,paddingTop:8}} className="row">
-            <span style={{fontWeight:700,color:"var(--t1)"}}>Total take-home</span>
-            <span style={{fontWeight:700,color:"var(--green)"}}>${fmt(totI*12+data.bonus*data.bonusCount)}/yr</span>
-          </div>
-        </div>
-      </>}
-
-      {tab==="income"&&<>
-        <div className="section-head"><div className="section-title">Income Sources</div><div className="section-sub">Tap any amount to edit</div></div>
-        {data.income.map((item,i)=>(
-          <div key={item.id} className="panel" style={{display:"flex",justifyContent:"space-between",alignItems:"center"}}>
-            <EditText value={item.name} onSave={v=>up(d=>{d.income[i].name=v;return d})} style={{fontSize:14,fontWeight:600,color:"var(--t2)"}} />
-            <div style={{display:"flex",alignItems:"center",gap:10}}>
-              <EditNum value={item.amount} prefix="$" suffix="/mo" onSave={v=>up(d=>{d.income[i].amount=v;return d})} color="var(--green)" />
-              {data.income.length>1&&<button className="remove-btn" onClick={()=>up(d=>{d.income.splice(i,1);return d})}>✕</button>}
-            </div>
-          </div>
-        ))}
-        <button className="add-btn" onClick={()=>up(d=>{d.income.push({id:`i${Date.now()}`,name:"New Source",amount:0});return d})}>+ Add income source</button>
-        <div className="total-bar"><span className="total-label">Total Monthly Income</span><span className="total-val" style={{color:"var(--green)"}}>${fmt(totI)}</span></div>
-      </>}
-
-      {tab==="expenses"&&<>
-        <div className="section-head"><div className="section-title">Monthly Expenses</div><div className="section-sub">Tap any amount to edit</div></div>
-        {data.expenses.map((item,i)=>(
-          <div key={item.id} className="panel">
-            <div style={{display:"flex",justifyContent:"space-between",alignItems:"center"}}>
-              <div>
-                <EditText value={item.name} onSave={v=>up(d=>{d.expenses[i].name=v;return d})} style={{fontSize:14,fontWeight:600,color:"var(--t2)"}} />
-                {item.flag==="eliminate"&&<div className="flag">⚠ ELIMINATE THIS</div>}
-              </div>
-              <div style={{display:"flex",alignItems:"center",gap:10}}>
-                <EditNum value={item.amount} prefix="$" suffix="/mo" onSave={v=>up(d=>{d.expenses[i].amount=v;return d})} color="var(--orange)" />
-                <button className="remove-btn" onClick={()=>up(d=>{d.expenses.splice(i,1);return d})}>✕</button>
-              </div>
-            </div>
-          </div>
-        ))}
-        <button className="add-btn" onClick={()=>up(d=>{d.expenses.push({id:`e${Date.now()}`,name:"New Expense",amount:0});return d})}>+ Add expense</button>
-        <div className="total-bar"><span className="total-label">Total Monthly Expenses</span><span className="total-val" style={{color:"var(--orange)"}}>${fmt(totE)}</span></div>
-        <div className="total-bar" style={{marginTop:8}}><span className="total-label">Monthly Surplus</span><span className="total-val" style={{color:surplus>=0?"var(--purple)":"var(--red)"}}>${fmt(surplus)}</span></div>
-      </>}
-
-      {tab==="debt"&&<>
-        <div className="section-head"><div className="section-title">Debt Kill Order</div><div className="section-sub">Update balances as you pay down. Reorder priority.</div></div>
-        {data.debts.sort((a,b)=>a.priority-b.priority).map((card,i)=>(
-          <div key={card.id} className="panel debt-card" style={{borderLeftColor:i<2?"var(--green)":i<4?"var(--yellow)":"var(--orange)"}}>
-            <div style={{display:"flex",justifyContent:"space-between",alignItems:"flex-start",marginBottom:8}}>
-              <div>
-                <div style={{fontSize:10,color:"var(--purple)",letterSpacing:1}}>KILL #{card.priority}</div>
-                <EditText value={card.name} onSave={v=>up(d=>{d.debts.find(x=>x.id===card.id).name=v;return d})} style={{fontSize:14,fontWeight:700,color:"var(--t1)"}} />
-                <div style={{fontSize:11,color:"var(--t5)"}}>...{card.last4}</div>
-              </div>
-              <EditNum value={card.balance} prefix="$" onSave={v=>up(d=>{d.debts.find(x=>x.id===card.id).balance=v;return d})} color="var(--red)" large />
-            </div>
-            <div style={{display:"flex",gap:16,fontSize:12,flexWrap:"wrap"}}>
-              <div style={{display:"flex",alignItems:"center",gap:4}}>
-                <span style={{color:"var(--t4)"}}>APR:</span>
-                <EditNum value={card.apr} suffix="%" onSave={v=>up(d=>{d.debts.find(x=>x.id===card.id).apr=v;return d})} color="var(--yellow)" />
-              </div>
-              <div style={{display:"flex",alignItems:"center",gap:4}}>
-                <span style={{color:"var(--t4)"}}>Min:</span>
-                <EditNum value={card.minPay} prefix="$" onSave={v=>up(d=>{d.debts.find(x=>x.id===card.id).minPay=v;return d})} color="var(--t3)" />
-              </div>
-              <div style={{display:"flex",alignItems:"center",gap:4}}>
-                {card.priority>1&&<button className="priority-btn" onClick={()=>up(d=>{const c=d.debts.find(x=>x.id===card.id);const p=d.debts.find(x=>x.priority===c.priority-1);if(p){p.priority++;c.priority--}return d})}>▲</button>}
-                {card.priority<data.debts.length&&<button className="priority-btn" onClick={()=>up(d=>{const c=d.debts.find(x=>x.id===card.id);const n=d.debts.find(x=>x.priority===c.priority+1);if(n){n.priority--;c.priority++}return d})}>▼</button>}
-              </div>
-            </div>
-          </div>
-        ))}
-        <div className="total-bar"><span className="total-label">Total Debt</span><span className="total-val" style={{color:"var(--red)"}}>${fmt(totD)}</span></div>
-
-        <div className="panel" style={{marginTop:12}}>
-          <div style={{fontSize:11,color:"var(--t4)",letterSpacing:1,marginBottom:8}}>PAYOFF PROJECTION</div>
-          <div style={{display:"flex",alignItems:"baseline",gap:6,marginBottom:10}}>
-            <span style={{fontSize:28,fontWeight:800,color:"var(--green)"}}>{dfm}</span>
-            <span style={{fontSize:12,color:"var(--t4)"}}>months to $0</span>
-            <span style={{fontSize:12,color:"var(--t5)"}}>@ ${fmt(surplus)}/mo</span>
-          </div>
-          <div className="bar-chart" style={{height:40}}>
-            {payoff.slice(0,18).map((m,i)=><div key={i} className="bar" style={{flex:1,background:m.rem===0?"var(--green)":`hsl(${270+i*3},70%,55%)`,height:`${Math.max(6,100-m.pct)}%`,opacity:m.rem===0?1:.7}}/>)}
-          </div>
-          <div style={{marginTop:12}}>
-            {payoff.filter(m=>m.mo<=(typeof dfm==="number"?dfm:18)).map((m,i)=>(
-              <div key={i} style={{display:"flex",justifyContent:"space-between",fontSize:11,padding:"3px 0",borderBottom:"1px solid #18181b"}}>
-                <span style={{color:"var(--t4)"}}>Month {m.mo}</span>
-                <span style={{color:m.rem===0?"var(--green)":"var(--t3)",fontWeight:m.rem===0?700:400}}>
-                  {m.rem===0?"DEBT FREE ✓":`$${fmt(m.rem)} remaining`}
-                </span>
-              </div>
-            ))}
-          </div>
-        </div>
-      </>}
-
-      {tab==="gym"&&<>
-        <div className="section-head"><div className="section-title">Gym — Chico Dan Split</div><div className="section-sub">PPL A/B rotation • Tap exercises to log completion</div></div>
-
-        <div className="panel" style={{borderLeft:"3px solid var(--green)"}}>
-          <div style={{display:"flex",gap:16,fontSize:12}}>
-            <div><span style={{color:"var(--t4)"}}>Warm-up:</span> <span style={{color:"var(--green)"}}>{GYM.info.warmup}</span></div>
-          </div>
-          <div style={{display:"flex",gap:16,fontSize:12,marginTop:4}}>
-            <div><span style={{color:"var(--t4)"}}>Working:</span> <span style={{color:"var(--green)"}}>{GYM.info.working}</span></div>
-          </div>
-          <div style={{display:"flex",gap:16,fontSize:12,marginTop:4}}>
-            <div><span style={{color:"var(--t4)"}}>Rest:</span> <span style={{color:"var(--yellow)"}}>{GYM.info.rest}</span></div>
-          </div>
-        </div>
-
-        <div style={{display:"flex",gap:4,marginBottom:16,overflowX:"auto",paddingBottom:4}}>
-          {GYM.days.map((d,i)=>(
-            <button key={d.id} onClick={()=>setGymDay(i)} style={{
-              padding:"8px 10px",borderRadius:6,cursor:"pointer",fontSize:11,fontWeight:700,fontFamily:"inherit",
-              whiteSpace:"nowrap",minWidth:"fit-content",transition:"all .15s",
-              background:gymDay===i?d.color+"20":"transparent",
-              border:gymDay===i?`1px solid ${d.color}`:"1px solid var(--s2)",
-              color:gymDay===i?d.color:"var(--t5)",
-            }}>{d.label}</button>
-          ))}
-        </div>
-
-        {(()=>{const day=GYM.days[gymDay];return(
-          <div>
-            <div style={{display:"flex",alignItems:"center",gap:8,marginBottom:14}}>
-              <div style={{width:4,height:24,borderRadius:2,background:day.color}}/>
-              <div style={{fontSize:16,fontWeight:800,color:"var(--t1)"}}>{day.label}</div>
-            </div>
-            {day.groups.map((g,gi)=>(
-              <div key={gi} className="panel" style={{borderLeft:`3px solid ${day.color}40`}}>
-                <div style={{fontSize:10,letterSpacing:2,color:day.color,marginBottom:10,textTransform:"uppercase",fontWeight:700}}>{g.muscle}</div>
-                {g.exercises.map((ex,ei)=>{
-                  const k=`gym-${day.id}-${gi}-${ei}`;
-                  const ch=data.checks[k]||false;
-                  return(
-                    <div key={ei} onClick={()=>up(d=>{d.checks[k]=!ch;return d})}
-                      style={{display:"flex",gap:10,padding:"9px 0",cursor:"pointer",
-                        borderBottom:ei<g.exercises.length-1?"1px solid #27272a":"none",
-                        opacity:ch?.45:1,transition:"opacity .2s"}}>
-                      <div style={{
-                        width:20,height:20,borderRadius:5,flexShrink:0,
-                        border:ch?`2px solid ${day.color}`:"2px solid var(--s3)",
-                        background:ch?day.color+"25":"transparent",
-                        display:"flex",alignItems:"center",justifyContent:"center",
-                        fontSize:11,color:day.color,fontWeight:700,
-                      }}>{ch?"✓":""}</div>
-                      <div>
-                        <div style={{fontSize:13,color:ch?"var(--t5)":"var(--t2)",fontWeight:600,
-                          textDecoration:ch?"line-through":"none",lineHeight:1.4}}>{ex}</div>
-                        <div style={{fontSize:10,color:"var(--t5)",marginTop:2}}>
-                          {GYM.info.warmup} warm-up → {GYM.info.working} working
-                        </div>
-                      </div>
-                    </div>
-                  );
-                })}
-              </div>
-            ))}
-            <div className="panel" style={{background:"transparent",border:"1px dashed var(--s2)",textAlign:"center"}}>
-              <div style={{fontSize:11,color:"var(--t4)"}}>
-                {day.groups.reduce((s,g)=>s+g.exercises.length,0)} exercises •
-                ~{day.groups.reduce((s,g)=>s+g.exercises.length,0) * 3} working sets •
-                ~{Math.round(day.groups.reduce((s,g)=>s+g.exercises.length,0) * 3 * 2.25)} min est.
-              </div>
-            </div>
-            <button className="reset-btn" onClick={()=>up(d=>{
-              Object.keys(d.checks).filter(k=>k.startsWith(`gym-${day.id}`)).forEach(k=>delete d.checks[k]);
-              return d;
-            })}>Reset {day.label} checkmarks</button>
-          </div>
-        );})()}
-
-        <div className="panel" style={{marginTop:12}}>
-          <div style={{fontSize:11,color:"var(--t4)",letterSpacing:1,marginBottom:10}}>WEEKLY ROTATION</div>
-          {[
-            {day:"Monday",workout:"Push A",color:"#ef4444"},
-            {day:"Tuesday",workout:"Pull A",color:"#60a5fa"},
-            {day:"Wednesday",workout:"Rest / Business",color:"var(--t5)"},
-            {day:"Thursday",workout:"Legs A",color:"#4ade80"},
-            {day:"Friday",workout:"Push B",color:"#f97316"},
-            {day:"Saturday",workout:"Pull B",color:"#a78bfa"},
-            {day:"Sunday",workout:"Legs B",color:"#facc15"},
-          ].map((r,i)=>(
-            <div key={i} style={{display:"flex",justifyContent:"space-between",padding:"8px 0",
-              borderBottom:i<6?"1px solid #27272a":"none",fontSize:12}}>
-              <span style={{color:"var(--t3)"}}>{r.day}</span>
-              <span style={{color:r.color,fontWeight:600}}>{r.workout}</span>
-            </div>
-          ))}
-          <div style={{marginTop:10,fontSize:10,color:"var(--t5)",lineHeight:1.6}}>
-            A/B split means you cycle through two variations. Week 1: Push A → Pull A → Legs A → Push B → Pull B → Legs B. Week 2: same rotation continues. Every muscle gets hit with different angles and volume.
-          </div>
-        </div>
-      </>}
-
-      {tab==="schedule"&&<>
-        <div className="section-head"><div className="section-title">Daily Operating System</div><div className="section-sub">Protect these blocks</div></div>
-        <div className="toggle-row">
-          <button className={`toggle-btn${wd?" active":""}`} onClick={()=>setWd(true)}>Weekday</button>
-          <button className={`toggle-btn${!wd?" active":""}`} onClick={()=>setWd(false)}>Weekend</button>
-        </div>
-        {(wd?WD:WE).map((s,i)=>{const c=SC[s.c];return(
-          <div key={i} className="sched-row">
-            <div className="sched-time">{s.t}</div>
-            <div className="sched-block" style={{background:c.bg,borderColor:c.bd,color:c.tx}}>{s.a}</div>
+            <div style={{background:"var(--s2)",borderRadius:4,height:6,overflow:"hidden"}}><div style={{width:`${pct}%`,height:"100%",background:t.c,borderRadius:4,transition:"width .4s"}}/></div>
           </div>
         )})}
-        <div className="panel" style={{marginTop:12}}>
-          <div style={{fontSize:11,color:"var(--t4)",letterSpacing:1,marginBottom:8}}>WEEKLY HOURS</div>
-          <div className="row"><span className="row-label">W2 Job</span><span style={{color:"var(--blue)"}}>~42.5 hrs</span></div>
-          <div className="row"><span className="row-label">Business (weekday)</span><span style={{color:"var(--orange)"}}>~15 hrs</span></div>
-          <div className="row"><span className="row-label">Business (weekend)</span><span style={{color:"var(--orange)"}}>~13 hrs</span></div>
-          <div className="row"><span className="row-label">Gym</span><span style={{color:"var(--green)"}}>~5 hrs</span></div>
-          <div style={{borderTop:"1px solid var(--s2)",marginTop:6,paddingTop:6}} className="row">
-            <span style={{fontWeight:700,color:"var(--t1)"}}>Productive total</span>
-            <span style={{fontWeight:700,color:"var(--purple)"}}>~75.5 hrs/wk</span>
-          </div>
-        </div>
-      </>}
+      </div>
 
-      {tab==="sprint"&&<>
-        <div className="section-head"><div className="section-title">90-Day Sprint</div><div className="section-sub">Check off tasks as you complete them</div></div>
-        {SPRINTS.map((week,wi)=>(
-          <div key={wi} className="panel" style={{borderLeft:`3px solid ${week.color}`}}>
-            <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:10}}>
-              <div style={{fontSize:13,fontWeight:700,color:"var(--t1)"}}>{week.week}</div>
-              <div style={{fontSize:9,fontWeight:700,color:week.color,background:week.color+"18",padding:"3px 8px",borderRadius:4,letterSpacing:1}}>{week.label}</div>
-            </div>
-            {week.tasks.map((task,ti)=>{const k=`${wi}-${ti}`;const ch=data.checks[k]||false;return(
-              <div key={ti} className="check-item" style={{opacity:ch?.5:1,borderBottom:ti<week.tasks.length-1?"1px solid #18181b":"none"}}
-                onClick={()=>up(d=>{d.checks[k]=!ch;return d})}>
-                <div className={`checkbox${ch?" checked":""}`}>{ch?"✓":""}</div>
-                <span className={`check-text${ch?" done":""}`}>{task}</span>
-              </div>
-            )})}
-            <div style={{marginTop:8,fontSize:10,color:"var(--t5)"}}>
-              {week.tasks.filter((_,ti)=>data.checks[`${wi}-${ti}`]).length}/{week.tasks.length} complete
-            </div>
+      {data.payments.length>0&&<div className="P">
+        <div style={{fontSize:11,color:"var(--t4)",letterSpacing:1,marginBottom:10}}>RECENT PAYMENTS</div>
+        <div style={{display:"flex",justifyContent:"space-between",fontSize:13,marginBottom:10}}>
+          <span style={{color:"var(--t3)"}}>Total paid to debt</span>
+          <span style={{color:"var(--green)",fontWeight:800}}>${fmt(totalPaid)}</span>
+        </div>
+        {data.payments.slice(0,5).map((p,i)=>(
+          <div key={p.id} style={{display:"flex",justifyContent:"space-between",fontSize:11,padding:"5px 0",borderTop:"1px solid #27272a"}}>
+            <span style={{color:"var(--t4)"}}>{p.date} — {p.cardName}</span>
+            <span style={{color:"var(--green)",fontWeight:600}}>-${fmt(p.amt)}</span>
           </div>
         ))}
-        {(()=>{
-          const total=SPRINTS.reduce((s,w)=>s+w.tasks.length,0);
-          const done=Object.values(data.checks).filter(Boolean).length;
-          const pct=Math.round((done/total)*100);
-          return <div className="panel">
-            <div style={{fontSize:11,color:"var(--t4)",letterSpacing:1,marginBottom:8}}>OVERALL PROGRESS</div>
-            <div style={{display:"flex",alignItems:"baseline",gap:6,marginBottom:8}}>
-              <span style={{fontSize:28,fontWeight:800,color:"var(--purple)"}}>{pct}%</span>
-              <span style={{fontSize:12,color:"var(--t4)"}}>{done}/{total} tasks</span>
-            </div>
-            <div style={{background:"var(--s1)",borderRadius:4,height:8,overflow:"hidden"}}>
-              <div style={{width:`${pct}%`,height:"100%",background:"linear-gradient(to right,var(--purple),var(--green))",borderRadius:4,transition:"width .3s"}}/>
-            </div>
-          </div>;
-        })()}
-        <button className="reset-btn" onClick={()=>up(d=>{d.checks={};return d})}>Reset all checkmarks</button>
-      </>}
+      </div>}
+    </>}
 
-      <div className="spacer"/>
+    {/* ===== GOALS ===== */}
+    {tab==="goals"&&<>
+      <div className="SH"><div className="ST">Goals & Targets</div><div className="SS">Tap current values to update your progress</div></div>
+      {data.goals.map((g,i)=>{
+        const pct=g.target>0?Math.min(100,Math.round((g.current/g.target)*100)):0;
+        const done=g.current>=g.target;
+        return(
+          <div key={g.id} className="P" style={{borderLeft:`3px solid ${done?g.color:g.color+"50"}`}}>
+            <div style={{display:"flex",justifyContent:"space-between",alignItems:"flex-start",marginBottom:6}}>
+              <div>
+                <ET value={g.name} onSave={v=>up(d=>{d.goals[i].name=v;return d})} style={{fontSize:14,fontWeight:700,color:"var(--t1)"}}/>
+                {done&&<span className="paid-badge" style={{marginLeft:8,background:`${g.color}20`,color:g.color,borderColor:`${g.color}40`}}>DONE</span>}
+              </div>
+              <div style={{textAlign:"right"}}>
+                <div style={{fontSize:11,color:"var(--t4)"}}>{pct}%</div>
+              </div>
+            </div>
+            <div style={{display:"flex",alignItems:"baseline",gap:4,marginBottom:6}}>
+              <EN value={g.current} prefix={g.prefix||""} onSave={v=>up(d=>{d.goals[i].current=v;return d})} color={g.color} large/>
+              <span style={{color:"var(--t5)",fontSize:12}}> / </span>
+              <EN value={g.target} prefix={g.prefix||""} onSave={v=>up(d=>{d.goals[i].target=v;return d})} color="var(--t3)"/>
+              <span style={{color:"var(--t5)",fontSize:11}}>{g.unit}</span>
+            </div>
+            <div className="goal-bar"><div className="goal-fill" style={{width:`${pct}%`,background:g.color}}/></div>
+          </div>
+        );
+      })}
+      <button className="ab" onClick={()=>up(d=>{d.goals.push({id:`g${Date.now()}`,name:"New Goal",current:0,target:10,unit:"",color:"#a855f7"});return d})}>+ Add goal</button>
+    </>}
+
+    {/* ===== INCOME ===== */}
+    {tab==="income"&&<>
+      <div className="SH"><div className="ST">Income Sources</div><div className="SS">Tap amounts to edit</div></div>
+      {data.income.map((item,i)=>(
+        <div key={item.id} className="P" style={{display:"flex",justifyContent:"space-between",alignItems:"center"}}>
+          <ET value={item.name} onSave={v=>up(d=>{d.income[i].name=v;return d})} style={{fontSize:14,fontWeight:600,color:"var(--t2)"}}/>
+          <div style={{display:"flex",alignItems:"center",gap:10}}>
+            <EN value={item.amount} prefix="$" suffix="/mo" onSave={v=>up(d=>{d.income[i].amount=v;return d})} color="var(--green)"/>
+            {data.income.length>1&&<button className="pb" onClick={()=>up(d=>{d.income.splice(i,1);return d})}>✕</button>}
+          </div>
+        </div>
+      ))}
+      <button className="ab" onClick={()=>up(d=>{d.income.push({id:`i${Date.now()}`,name:"New Source",amount:0});return d})}>+ Add income source</button>
+      <div className="TB"><span style={{fontSize:12,color:"var(--t3)",fontWeight:600}}>Total Monthly Income</span><span style={{fontSize:16,fontWeight:800,color:"var(--green)"}}>${fmt(totI)}</span></div>
+    </>}
+
+    {/* ===== EXPENSES ===== */}
+    {tab==="expenses"&&<>
+      <div className="SH"><div className="ST">Monthly Expenses</div><div className="SS">Tap amounts to edit</div></div>
+      {data.expenses.map((item,i)=>(
+        <div key={item.id} className="P">
+          <div style={{display:"flex",justifyContent:"space-between",alignItems:"center"}}>
+            <div><ET value={item.name} onSave={v=>up(d=>{d.expenses[i].name=v;return d})} style={{fontSize:14,fontWeight:600,color:"var(--t2)"}}/>{item.flag&&<div style={{fontSize:10,color:"var(--red)",marginTop:2}}>⚠ ELIMINATE</div>}</div>
+            <div style={{display:"flex",alignItems:"center",gap:10}}>
+              <EN value={item.amount} prefix="$" suffix="/mo" onSave={v=>up(d=>{d.expenses[i].amount=v;return d})} color="var(--orange)"/>
+              <button className="pb" onClick={()=>up(d=>{d.expenses.splice(i,1);return d})}>✕</button>
+            </div>
+          </div>
+        </div>
+      ))}
+      <button className="ab" onClick={()=>up(d=>{d.expenses.push({id:`e${Date.now()}`,name:"New Expense",amount:0});return d})}>+ Add expense</button>
+      <div className="TB"><span style={{fontSize:12,color:"var(--t3)",fontWeight:600}}>Total Expenses</span><span style={{fontSize:16,fontWeight:800,color:"var(--orange)"}}>${fmt(totE)}</span></div>
+      <div className="TB"><span style={{fontSize:12,color:"var(--t3)",fontWeight:600}}>Surplus</span><span style={{fontSize:16,fontWeight:800,color:surplus>=0?"var(--purple)":"var(--red)"}}>${fmt(surplus)}</span></div>
+    </>}
+
+    {/* ===== DEBT ===== */}
+    {tab==="debt"&&<>
+      <div className="SH"><div className="ST">Debt Kill Order</div><div className="SS">Log payments • Update balances • Reorder</div></div>
+      {data.debts.sort((a,b)=>a.pri-b.pri).map((card,i)=>{
+        const dead=card.bal<=0;
+        return(
+        <div key={card.id} className="P" style={{borderLeft:`3px solid ${dead?"var(--green)":i<2?"var(--green)":i<4?"var(--yellow)":"var(--orange)"}`,opacity:dead?.6:1}}>
+          <div style={{display:"flex",justifyContent:"space-between",alignItems:"flex-start",marginBottom:8}}>
+            <div>
+              {dead?<span className="paid-badge">PAID OFF ✓</span>:<div style={{fontSize:10,color:"var(--purple)",letterSpacing:1}}>KILL #{card.pri}</div>}
+              <ET value={card.name} onSave={v=>up(d=>{d.debts.find(x=>x.id===card.id).name=v;return d})} style={{fontSize:14,fontWeight:700,color:"var(--t1)"}}/>
+              <div style={{fontSize:11,color:"var(--t5)"}}>...{card.l4}</div>
+            </div>
+            <EN value={card.bal} prefix="$" onSave={v=>up(d=>{d.debts.find(x=>x.id===card.id).bal=Math.max(0,v);return d})} color={dead?"var(--green)":"var(--red)"} large/>
+          </div>
+          {!dead&&<>
+            <div style={{display:"flex",gap:16,fontSize:12,flexWrap:"wrap"}}>
+              <div style={{display:"flex",alignItems:"center",gap:4}}><span style={{color:"var(--t4)"}}>APR:</span><EN value={card.apr} suffix="%" onSave={v=>up(d=>{d.debts.find(x=>x.id===card.id).apr=v;return d})} color="var(--yellow)"/></div>
+              <div style={{display:"flex",alignItems:"center",gap:4}}><span style={{color:"var(--t4)"}}>Min:</span><EN value={card.min} prefix="$" onSave={v=>up(d=>{d.debts.find(x=>x.id===card.id).min=v;return d})} color="var(--t3)"/></div>
+              <div style={{display:"flex",alignItems:"center",gap:4}}>
+                {card.pri>1&&<button style={{background:"var(--s2)",border:"none",color:"var(--t3)",borderRadius:3,cursor:"pointer",padding:"2px 6px",fontSize:10}} onClick={()=>up(d=>{const c=d.debts.find(x=>x.id===card.id);const p=d.debts.find(x=>x.pri===c.pri-1);if(p){p.pri++;c.pri--}return d})}>▲</button>}
+                {card.pri<data.debts.length&&<button style={{background:"var(--s2)",border:"none",color:"var(--t3)",borderRadius:3,cursor:"pointer",padding:"2px 6px",fontSize:10}} onClick={()=>up(d=>{const c=d.debts.find(x=>x.id===card.id);const n=d.debts.find(x=>x.pri===c.pri+1);if(n){n.pri--;c.pri++}return d})}>▼</button>}
+              </div>
+            </div>
+            {payingCard===card.id?<div style={{marginTop:10}}>
+              <input ref={payRef} type="number" inputMode="decimal" className="pay-input" placeholder="Payment amount" value={payAmt} onChange={e=>setPayAmt(e.target.value)} onKeyDown={e=>{if(e.key==="Enter")logPayment(card.id)}}/>
+              <div style={{display:"flex",gap:6,marginTop:6}}>
+                <button className="pay-btn" style={{flex:1}} onClick={()=>logPayment(card.id)}>Apply ${payAmt||"0"}</button>
+                <button className="pay-btn" style={{flex:0,borderColor:"var(--s3)",color:"var(--t4)",background:"transparent",padding:"10px 16px"}} onClick={()=>{setPayingCard(null);setPayAmt("")}}>✕</button>
+              </div>
+            </div>
+            :<button className="pay-btn" onClick={()=>{setPayingCard(card.id);setPayAmt("")}}>💰 Log Payment</button>}
+          </>}
+        </div>
+      )})}
+      <div className="TB"><span style={{fontSize:12,color:"var(--t3)",fontWeight:600}}>Total Debt</span><span style={{fontSize:16,fontWeight:800,color:totD>0?"var(--red)":"var(--green)"}}>${fmt(totD)}</span></div>
+
+      <div className="P" style={{marginTop:4}}>
+        <div style={{fontSize:11,color:"var(--t4)",letterSpacing:1,marginBottom:8}}>PROJECTION @ ${fmt(surplus)}/MO</div>
+        <div style={{display:"flex",alignItems:"baseline",gap:6,marginBottom:10}}>
+          <span style={{fontSize:28,fontWeight:800,color:"var(--green)"}}>{dfm}</span><span style={{fontSize:12,color:"var(--t4)"}}>months to $0</span>
+        </div>
+        {payoff.map((m,i)=>(
+          <div key={i} style={{display:"flex",justifyContent:"space-between",fontSize:11,padding:"3px 0",borderBottom:"1px solid #18181b"}}>
+            <span style={{color:"var(--t4)"}}>Month {m.mo}</span>
+            <span style={{color:m.rem===0?"var(--green)":"var(--t3)",fontWeight:m.rem===0?700:400}}>{m.rem===0?"DEBT FREE ✓":`$${fmt(m.rem)}`}</span>
+          </div>
+        ))}
+      </div>
+
+      {data.payments.length>0&&<div className="P" style={{marginTop:4}}>
+        <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:8}}>
+          <div style={{fontSize:11,color:"var(--t4)",letterSpacing:1}}>PAYMENT HISTORY</div>
+          <span style={{fontSize:13,fontWeight:800,color:"var(--green)"}}>${fmt(totalPaid)} total</span>
+        </div>
+        {data.payments.map((p,i)=>(
+          <div key={p.id} style={{display:"flex",justifyContent:"space-between",fontSize:11,padding:"6px 0",borderTop:"1px solid #27272a"}}>
+            <div><span style={{color:"var(--t3)"}}>{p.cardName}</span><br/><span style={{color:"var(--t5)",fontSize:10}}>{p.date}</span></div>
+            <span style={{color:"var(--green)",fontWeight:700}}>-${fmt(p.amt)}</span>
+          </div>
+        ))}
+        <button style={{width:"100%",padding:8,marginTop:8,background:"transparent",border:"1px solid var(--s2)",borderRadius:6,color:"var(--t5)",fontSize:10,cursor:"pointer",fontFamily:"inherit"}} onClick={()=>up(d=>{d.payments=[];return d})}>Clear history</button>
+      </div>}
+    </>}
+
+    {/* ===== GYM ===== */}
+    {tab==="gym"&&<>
+      <div className="SH"><div className="ST">Gym — PPL Split</div><div className="SS">Warm: {GYM.info.wu} • Work: {GYM.info.wk} • Rest: {GYM.info.rest}</div></div>
+
+      <div className="P" style={{borderLeft:`3px solid ${todayWorkout.c}`,marginBottom:16}}>
+        <div style={{fontSize:10,color:"var(--t4)",letterSpacing:1}}>TODAY</div>
+        <div style={{fontSize:16,fontWeight:800,color:todayWorkout.c}}>{todayWorkout.w}</div>
+      </div>
+
+      <div style={{display:"flex",gap:4,marginBottom:16,overflowX:"auto",paddingBottom:4}}>
+        {GYM.days.map((d,i)=>(
+          <button key={d.id} onClick={()=>setGymDay(i)} style={{padding:"8px 8px",borderRadius:6,cursor:"pointer",fontSize:10,fontWeight:700,fontFamily:"inherit",whiteSpace:"nowrap",transition:"all .15s",
+            background:gymDay===i?d.c+"20":"transparent",border:gymDay===i?`1px solid ${d.c}`:"1px solid var(--s2)",color:gymDay===i?d.c:"var(--t5)"}}>{d.l}</button>
+        ))}
+      </div>
+
+      {(()=>{const day=GYM.days[gymDay];return<>
+        {day.g.map((grp,gi)=>(
+          <div key={gi} className="P" style={{borderLeft:`3px solid ${day.c}40`}}>
+            <div style={{fontSize:10,letterSpacing:2,color:day.c,marginBottom:10,textTransform:"uppercase",fontWeight:700}}>{grp.m}</div>
+            {grp.e.map((ex,ei)=>{const k=`gym-${day.id}-${gi}-${ei}`;const ch=data.checks[k];return(
+              <div key={ei} onClick={()=>up(d=>{d.checks[k]=!ch;return d})} style={{display:"flex",gap:10,padding:"9px 0",cursor:"pointer",borderBottom:ei<grp.e.length-1?"1px solid #27272a":"none",opacity:ch?.45:1,transition:"opacity .2s"}}>
+                <div style={{width:20,height:20,borderRadius:5,flexShrink:0,border:ch?`2px solid ${day.c}`:"2px solid var(--s3)",background:ch?day.c+"25":"transparent",display:"flex",alignItems:"center",justifyContent:"center",fontSize:11,color:day.c,fontWeight:700}}>{ch?"✓":""}</div>
+                <div><div style={{fontSize:13,color:ch?"var(--t5)":"var(--t2)",fontWeight:600,textDecoration:ch?"line-through":"none"}}>{ex}</div></div>
+              </div>
+            )})}
+          </div>
+        ))}
+        <button style={{width:"100%",padding:10,background:"transparent",border:"1px solid var(--s2)",borderRadius:8,color:"var(--t5)",fontSize:11,cursor:"pointer",fontFamily:"inherit",marginTop:4}} onClick={()=>up(d=>{Object.keys(d.checks).filter(k=>k.startsWith(`gym-${day.id}`)).forEach(k=>delete d.checks[k]);return d})}>Reset {day.l}</button>
+      </>})()}
+
+      <div className="P" style={{marginTop:12}}>
+        <div style={{fontSize:11,color:"var(--t4)",letterSpacing:1,marginBottom:10}}>WEEKLY ROTATION</div>
+        {ROTATION.map((r,i)=>(
+          <div key={i} style={{display:"flex",justifyContent:"space-between",padding:"8px 0",borderBottom:i<6?"1px solid #27272a":"none",fontSize:12}}>
+            <span style={{color:i===dow?"var(--t1)":"var(--t3)",fontWeight:i===dow?700:400}}>{i===dow?"▸ ":""}{r.day}</span>
+            <span style={{color:r.c,fontWeight:600}}>{r.w}</span>
+          </div>
+        ))}
+      </div>
+    </>}
+
+    {/* ===== SCHEDULE ===== */}
+    {tab==="schedule"&&<>
+      <div className="SH"><div className="ST">Daily Schedule</div><div className="SS">Protect these blocks</div></div>
+      <div className="tr"><button className={`tb${wd?" on":""}`} onClick={()=>setWd(true)}>Weekday</button><button className={`tb${!wd?" on":""}`} onClick={()=>setWd(false)}>Weekend</button></div>
+      {(wd?WD:WE).map((s,i)=>{const c=SC[s.c];return(
+        <div key={i} style={{display:"flex",gap:8,marginBottom:6}}>
+          <div style={{width:44,fontSize:10,color:"var(--t5)",textAlign:"right",paddingTop:10,fontWeight:600,flexShrink:0}}>{s.t}</div>
+          <div style={{flex:1,background:c.bg,border:`1px solid ${c.bd}`,borderRadius:6,padding:"10px 12px",fontSize:12,color:c.tx}}>{s.a}</div>
+        </div>
+      )})}
+      <div className="P" style={{marginTop:12}}>
+        <div style={{fontSize:11,color:"var(--t4)",letterSpacing:1,marginBottom:8}}>WEEKLY HOURS</div>
+        <div className="R"><span className="Rl">W2 Job</span><span style={{color:"var(--blue)"}}>~42.5h</span></div>
+        <div className="R"><span className="Rl">Business (wkday)</span><span style={{color:"var(--orange)"}}>~15h</span></div>
+        <div className="R"><span className="Rl">Business (wkend)</span><span style={{color:"var(--orange)"}}>~13h</span></div>
+        <div className="R"><span className="Rl">Gym</span><span style={{color:"var(--green)"}}>~5h</span></div>
+        <div style={{borderTop:"1px solid var(--s2)",marginTop:6,paddingTop:6}} className="R"><span style={{fontWeight:700,color:"var(--t1)"}}>Total</span><span style={{fontWeight:700,color:"var(--purple)"}}>~75.5h/wk</span></div>
+      </div>
+    </>}
+
+    {/* ===== SPRINT ===== */}
+    {tab==="sprint"&&<>
+      <div className="SH"><div className="ST">90-Day Sprint</div><div className="SS">Check tasks as you complete them</div></div>
+      {SPRINTS.map((w,wi)=>(
+        <div key={wi} className="P" style={{borderLeft:`3px solid ${w.color}`}}>
+          <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:10}}>
+            <div style={{fontSize:13,fontWeight:700,color:"var(--t1)"}}>{w.week}</div>
+            <div style={{fontSize:9,fontWeight:700,color:w.color,background:w.color+"18",padding:"3px 8px",borderRadius:4,letterSpacing:1}}>{w.label}</div>
+          </div>
+          {w.tasks.map((task,ti)=>{const k=`s-${wi}-${ti}`;const ch=data.checks[k];return(
+            <div key={ti} onClick={()=>up(d=>{d.checks[k]=!ch;return d})} style={{display:"flex",gap:10,padding:"8px 0",cursor:"pointer",opacity:ch?.5:1,borderBottom:ti<w.tasks.length-1?"1px solid #18181b":"none"}}>
+              <div style={{width:18,height:18,borderRadius:4,flexShrink:0,border:ch?`2px solid ${w.color}`:"2px solid var(--s3)",background:ch?w.color+"25":"transparent",display:"flex",alignItems:"center",justifyContent:"center",fontSize:10,color:w.color}}>{ch?"✓":""}</div>
+              <span style={{fontSize:12,color:ch?"var(--t5)":"var(--t3)",lineHeight:1.5,textDecoration:ch?"line-through":"none"}}>{task}</span>
+            </div>
+          )})}
+          <div style={{marginTop:8,fontSize:10,color:"var(--t5)"}}>{w.tasks.filter((_,ti)=>data.checks[`s-${wi}-${ti}`]).length}/{w.tasks.length} done</div>
+        </div>
+      ))}
+      {(()=>{const tot=SPRINTS.reduce((s,w)=>s+w.tasks.length,0);const dn=SPRINTS.reduce((s,w,wi)=>s+w.tasks.filter((_,ti)=>data.checks[`s-${wi}-${ti}`]).length,0);const p=Math.round((dn/tot)*100);return(
+        <div className="P"><div style={{fontSize:11,color:"var(--t4)",letterSpacing:1,marginBottom:8}}>OVERALL</div>
+          <div style={{display:"flex",alignItems:"baseline",gap:6,marginBottom:8}}><span style={{fontSize:28,fontWeight:800,color:"var(--purple)"}}>{p}%</span><span style={{fontSize:12,color:"var(--t4)"}}>{dn}/{tot}</span></div>
+          <div style={{background:"var(--s2)",borderRadius:4,height:8,overflow:"hidden"}}><div style={{width:`${p}%`,height:"100%",background:"linear-gradient(to right,var(--purple),var(--green))",borderRadius:4,transition:"width .3s"}}/></div>
+        </div>
+      )})()}
+      <button style={{width:"100%",padding:12,background:"var(--s1)",border:"1px solid var(--s2)",borderRadius:8,color:"var(--t5)",fontSize:12,cursor:"pointer",fontFamily:"inherit",marginTop:4}} onClick={()=>up(d=>{Object.keys(d.checks).filter(k=>k.startsWith("s-")).forEach(k=>delete d.checks[k]);return d})}>Reset sprint</button>
+    </>}
+
+    <div style={{height:60}}/>
     </div>
   </>;
 }
-
 ReactDOM.createRoot(document.getElementById("app")).render(<App/>);
 </script>
 </body>
