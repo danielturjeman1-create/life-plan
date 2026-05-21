@@ -1,0 +1,614 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Life Plan">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="theme-color" content="#09090b">
+<title>Life Plan — Command Center</title>
+<link rel="manifest" href="data:application/json;base64,ewogICJuYW1lIjogIkxpZmUgUGxhbiAtIENvbW1hbmQgQ2VudGVyIiwKICAic2hvcnRfbmFtZSI6ICJMaWZlIFBsYW4iLAogICJzdGFydF91cmwiOiAiLiIsCiAgImRpc3BsYXkiOiAic3RhbmRhbG9uZSIsCiAgImJhY2tncm91bmRfY29sb3IiOiAiIzA5MDkwYiIsCiAgInRoZW1lX2NvbG9yIjogIiMwOTA5MGIiLAogICJpY29ucyI6IFtdCn0=">
+<style>
+  *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+  :root{--bg:#09090b;--s1:#18181b;--s2:#27272a;--s3:#3f3f46;--t1:#fafafa;--t2:#e4e4e7;--t3:#a1a1aa;--t4:#71717a;--t5:#52525b;--purple:#a855f7;--green:#4ade80;--orange:#f97316;--red:#ef4444;--yellow:#facc15;--blue:#60a5fa}
+  body{font-family:'SF Mono','Fira Code','JetBrains Mono','Menlo',monospace;background:var(--bg);color:var(--t2);min-height:100vh;min-height:100dvh;overflow-x:hidden;padding-bottom:env(safe-area-inset-bottom)}
+  input[type=number]::-webkit-inner-spin-button,input[type=number]::-webkit-outer-spin-button{-webkit-appearance:none;margin:0}
+  input[type=number]{-moz-appearance:textfield}
+  input{font-family:inherit}
+  button{font-family:inherit}
+  .header{background:linear-gradient(135deg,#09090b,#18181b 50%,#09090b);padding:max(env(safe-area-inset-top),24px) 16px 16px;border-bottom:1px solid var(--s2)}
+  .tabs{display:flex;border-bottom:1px solid var(--s2);background:#0a0a0a;position:sticky;top:0;z-index:20;overflow-x:auto;-webkit-overflow-scrolling:touch}
+  .tab{flex:1;padding:10px 4px;background:none;border:none;border-bottom:2px solid transparent;color:var(--t5);font-size:10px;text-align:center;cursor:pointer;min-width:56px;transition:all .15s}
+  .tab.active{border-bottom-color:var(--purple);color:var(--t2)}
+  .tab-icon{font-size:16px;margin-bottom:2px}
+  .content{padding:16px;max-width:600px;margin:0 auto}
+  .panel{background:var(--s1);border:1px solid var(--s2);border-radius:10px;padding:16px;margin-bottom:10px}
+  .metric-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:16px}
+  .metric{background:var(--s1);border:1px solid var(--s2);border-radius:10px;padding:14px}
+  .metric-label{font-size:9px;color:var(--t5);letter-spacing:2px;margin-bottom:6px}
+  .metric-val{font-size:20px;font-weight:800}
+  .metric-sub{font-size:10px;color:var(--t5)}
+  .section-head{margin-bottom:16px}
+  .section-title{font-size:18px;font-weight:800;color:var(--t1)}
+  .section-sub{font-size:11px;color:var(--t5);margin-top:2px}
+  .row{display:flex;justify-content:space-between;align-items:center;padding:6px 0;font-size:12px}
+  .row-label{color:var(--t3)}
+  .row-val{font-weight:700}
+  .editable{cursor:pointer;border-bottom:1px dashed rgba(255,255,255,.15);padding:2px 0}
+  .edit-input{background:var(--s2);border:1px solid var(--purple);border-radius:4px;color:var(--t2);font-size:13px;font-weight:700;padding:4px 8px;width:100px;outline:none;text-align:right}
+  .edit-input.large{font-size:18px}
+  .edit-input.text{text-align:left;width:auto;max-width:160px}
+  .total-bar{background:var(--s1);border:1px solid var(--s2);border-radius:8px;padding:12px 16px;display:flex;justify-content:space-between;align-items:center;margin-bottom:10px}
+  .total-label{font-size:12px;color:var(--t3);font-weight:600}
+  .total-val{font-size:16px;font-weight:800}
+  .add-btn{width:100%;padding:12px;background:transparent;border:1px dashed var(--s2);border-radius:8px;color:var(--t5);font-size:12px;cursor:pointer;margin-bottom:10px}
+  .toggle-row{display:flex;gap:6px;margin-bottom:16px}
+  .toggle-btn{flex:1;padding:10px;border-radius:6px;cursor:pointer;font-size:12px;font-weight:600;background:transparent;border:1px solid var(--s2);color:var(--t5);transition:all .15s}
+  .toggle-btn.active{background:var(--s2);border-color:var(--s3);color:var(--t1)}
+  .sched-row{display:flex;gap:8px;margin-bottom:6px}
+  .sched-time{width:44px;font-size:10px;color:var(--t5);text-align:right;padding-top:10px;font-weight:600;flex-shrink:0}
+  .sched-block{flex:1;border-radius:6px;padding:10px 12px;font-size:12px;line-height:1.4;border:1px solid}
+  .check-item{display:flex;gap:10px;padding:8px 0;cursor:pointer;transition:opacity .2s}
+  .checkbox{width:18px;height:18px;border-radius:4px;flex-shrink:0;margin-top:1px;display:flex;align-items:center;justify-content:center;font-size:10px;border:2px solid var(--s3)}
+  .checkbox.checked{background:rgba(168,85,247,.2);border-color:var(--purple);color:var(--purple)}
+  .check-text{font-size:12px;color:var(--t3);line-height:1.5}
+  .check-text.done{color:var(--t5);text-decoration:line-through}
+  .bar-chart{display:flex;gap:2px;height:32px;align-items:flex-end}
+  .bar{border-radius:2px 2px 0 0;transition:height .3s}
+  .tier-row{margin-bottom:12px}
+  .tier-label{display:flex;justify-content:space-between;font-size:12px;margin-bottom:4px}
+  .tier-track{background:var(--s1);border-radius:4px;height:6px;overflow:hidden}
+  .tier-fill{height:100%;border-radius:4px;transition:width .4s}
+  .debt-card{border-left:3px solid;margin-bottom:10px}
+  .priority-btn{background:var(--s2);border:none;color:var(--t3);border-radius:3px;cursor:pointer;padding:2px 6px;font-size:10px}
+  .remove-btn{background:none;border:none;color:var(--t5);cursor:pointer;font-size:16px;padding:4px}
+  .reset-btn{width:100%;padding:12px;background:var(--s1);border:1px solid var(--s2);border-radius:8px;color:var(--t5);font-size:12px;cursor:pointer;margin-top:8px}
+  .flag{font-size:10px;color:var(--red);margin-top:2px}
+  .spacer{height:60px}
+  @media(max-width:380px){.metric-val{font-size:17px}.tab{min-width:48px;font-size:9px}}
+</style>
+</head>
+<body>
+<div id="app"></div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.production.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.23.9/babel.min.js"></script>
+<script type="text/babel">
+const{useState,useEffect,useCallback,useRef}=React;
+
+const STORE_KEY="life-plan-v1";
+const load=()=>{try{return JSON.parse(localStorage.getItem(STORE_KEY))}catch{return null}};
+const persist=(d)=>{try{localStorage.setItem(STORE_KEY,JSON.stringify(d))}catch(e){console.error(e)}};
+
+const DEFAULTS={
+  income:[
+    {id:"w2",name:"W2 Job (after tax)",amount:3800},
+    {id:"side",name:"Side Jobs",amount:750},
+  ],
+  expenses:[
+    {id:"rent",name:"Rent",amount:2512.63},
+    {id:"rentfee",name:"Rent processing fee",amount:74.12,flag:"eliminate"},
+    {id:"electric",name:"FPL Electric",amount:78},
+    {id:"internet",name:"Fision Internet",amount:32},
+    {id:"food",name:"Food & Groceries",amount:200},
+    {id:"gas",name:"Gas",amount:75},
+  ],
+  debts:[
+    {id:"savor",name:"Cap One Savor",last4:"2779",balance:40,apr:20,minPay:25,priority:1},
+    {id:"qs",name:"Cap One Quicksilver",last4:"0914",balance:363.61,apr:24,minPay:25,priority:2},
+    {id:"amex",name:"Amex Blue Biz Plus",last4:"32002",balance:1173.10,apr:22,minPay:43,priority:3},
+    {id:"venture",name:"Cap One Venture One",last4:"8715",balance:1374.54,apr:24,minPay:35,priority:4},
+    {id:"freedom",name:"Chase Freedom Unl.",last4:"3224",balance:1949.60,apr:25,minPay:40,priority:5},
+    {id:"sapphire",name:"Chase Sapphire Pref.",last4:"4520",balance:3682.49,apr:22,minPay:50,priority:6},
+  ],
+  cash:{checking:1534.53,ira:2651.70},
+  checks:{},
+  bonus:1900,
+  bonusCount:2,
+};
+
+const TIERS=[
+  {label:"$50K",mo:4167,color:"#4ade80"},
+  {label:"$100K",mo:8333,color:"#facc15"},
+  {label:"$250K",mo:20833,color:"#f97316"},
+  {label:"$1M",mo:83333,color:"#ef4444"},
+];
+
+const SPRINTS=[
+  {week:"Week 1 (Now)",color:"#ef4444",label:"SETUP",tasks:[
+    "Pay off Savor ($40) — kill one card today",
+    "Switch rent from Sapphire to bank transfer",
+    "Set Yahoo app password in ByteBreak config.py",
+    "Write list of 50 businesses for cold outreach",
+    "Print daily schedule, tape to wall",
+  ]},
+  {week:"Weeks 2–4",color:"#f97316",label:"OUTREACH",tasks:[
+    "10 cold emails/day to local businesses",
+    "Follow up every email after 3 days",
+    "Pay off Quicksilver ($364)",
+    "Create first 3 Etsy digital products",
+    "Film first 5 TikTok videos",
+  ]},
+  {week:"Month 2",color:"#facc15",label:"FIRST $",tasks:[
+    "Sign ByteBreak client #1 ($500/mo)",
+    "10+ Etsy products listed with SEO",
+    "TikTok posting 2x/day consistently",
+    "Amex BBP balance 50%+ eliminated",
+    "Review & adjust daily schedule",
+  ]},
+  {week:"Month 3",color:"#4ade80",label:"MOMENTUM",tasks:[
+    "ByteBreak at 2–3 clients ($1K–1.5K/mo)",
+    "15–20 Etsy products live",
+    "60+ TikTok videos posted total",
+    "Amex eliminated, attack Venture One",
+    "Emergency fund started ($500 target)",
+  ]},
+];
+
+const WD=[
+  {t:"6:00",a:"Wake — no phone 15 min",c:"routine"},
+  {t:"6:15",a:"Hydrate, stretch",c:"routine"},
+  {t:"6:30",a:"Gym (Mon/Tue/Thu/Fri)",c:"gym"},
+  {t:"7:45",a:"Shower + ready",c:"routine"},
+  {t:"8:15",a:"Breakfast + 3 priorities",c:"routine"},
+  {t:"8:30",a:"W2 Job",c:"work"},
+  {t:"5:00",a:"Commute home",c:"work"},
+  {t:"5:30",a:"Snack + decompress",c:"routine"},
+  {t:"5:45",a:"OUTREACH — emails, DMs, follow-ups",c:"biz"},
+  {t:"7:15",a:"BUILD — Etsy products, ByteBreak, content",c:"biz"},
+  {t:"8:45",a:"Review day, plan tomorrow",c:"biz"},
+  {t:"9:15",a:"Free time",c:"free"},
+  {t:"10:30",a:"Lights out",c:"routine"},
+];
+const WE=[
+  {t:"7:00",a:"Wake up",c:"routine"},
+  {t:"7:15",a:"Coffee + plan 3 outcomes",c:"routine"},
+  {t:"7:45",a:"Gym or active recovery",c:"gym"},
+  {t:"9:15",a:"Breakfast",c:"routine"},
+  {t:"9:30",a:"DEEP WORK — 3.5 hrs uninterrupted",c:"biz"},
+  {t:"1:00",a:"Lunch + break",c:"routine"},
+  {t:"2:00",a:"DEEP WORK 2 — outreach, TikTok, clients",c:"biz"},
+  {t:"5:00",a:"Done — rest of day is yours",c:"free"},
+];
+const SC={
+  routine:{bg:"#111827",bd:"#1f2937",tx:"#9ca3af"},
+  gym:{bg:"#052e16",bd:"#166534",tx:"#4ade80"},
+  work:{bg:"#0c1929",bd:"#1e3a5f",tx:"#60a5fa"},
+  biz:{bg:"#271207",bd:"#7c2d12",tx:"#fb923c"},
+  free:{bg:"#1a1625",bd:"#4c1d95",tx:"#a78bfa"},
+};
+
+const GYM={
+  info:{warmup:"1–2 sets × 8–12 reps",working:"1–3 sets × 6–10 reps",rest:"2–2:30 min between working sets"},
+  days:[
+    {id:"pushA",label:"Push A",color:"#ef4444",groups:[
+      {muscle:"Chest",exercises:["Incline Smith Machine","Incline Chest Fly","Seated Incline Press","DB Flat"]},
+      {muscle:"Shoulders",exercises:["Plate Loaded OHP","Cable Lateral Raises"]},
+      {muscle:"Triceps",exercises:["Straight Bar Pushdown (Last)"]},
+    ]},
+    {id:"pullA",label:"Pull A",color:"#60a5fa",groups:[
+      {muscle:"Back",exercises:["Pulldowns","Chest Supported Row (Wide Grip)","ISO High 2 Low Row","Chest Supported Neutral Grip Row (Inside Grip)"]},
+      {muscle:"Biceps",exercises:["Hammer Curl","Cable Curls"]},
+    ]},
+    {id:"legsA",label:"Legs A",color:"#4ade80",groups:[
+      {muscle:"Legs",exercises:["Squat","Leg Press","Leg Extension","Hyper Extension","Seated Hamstring Curl"]},
+    ]},
+    {id:"pushB",label:"Push B",color:"#f97316",groups:[
+      {muscle:"Chest",exercises:["Incline DB","Seated Incline Chest Press","Chest Fly"]},
+      {muscle:"Shoulders",exercises:["Smith OHP","Seated DB Lateral Raises","Rear Delt DB"]},
+      {muscle:"Triceps",exercises:["Tricep Pushdown"]},
+    ]},
+    {id:"pullB",label:"Pull B",color:"#a78bfa",groups:[
+      {muscle:"Back",exercises:["Pull Downs","Seated Cable Row (High)","DB Row"]},
+      {muscle:"Biceps",exercises:["Cable Curls"]},
+    ]},
+    {id:"legsB",label:"Legs B",color:"#facc15",groups:[
+      {muscle:"Legs",exercises:["Laying Down Hamstring Curl","RDLs","ISO Standing Leg Curl","BSS","Leg Extension"]},
+    ]},
+  ]
+};
+
+function sim(debts,surplus){
+  let cards=debts.map(c=>({...c,rem:c.balance})).sort((a,b)=>a.priority-b.priority);
+  let months=[],tot=cards.reduce((s,c)=>s+c.rem,0);const st=tot;
+  for(let m=0;m<24&&tot>0.5;m++){
+    let av=surplus;
+    cards.forEach(c=>{if(c.rem>0){let mp=Math.min(c.minPay,c.rem);c.rem=Math.max(0,c.rem-mp);c.rem*=(1+c.apr/100/12);av-=mp}});
+    cards.filter(c=>c.rem>0).sort((a,b)=>a.priority-b.priority).forEach(c=>{if(av>0){let x=Math.min(av,c.rem);c.rem=Math.max(0,c.rem-x);av-=x}});
+    tot=cards.reduce((s,c)=>s+Math.max(0,c.rem),0);
+    months.push({mo:m+1,rem:Math.round(tot),pct:Math.round(((st-tot)/st)*100)});
+  }
+  return months;
+}
+
+const fmt=n=>Number(n).toLocaleString(undefined,{minimumFractionDigits:n%1?2:0,maximumFractionDigits:2});
+
+function EditNum({value,onSave,prefix="",suffix="",color="#e4e4e7",large=false}){
+  const[ed,setEd]=useState(false),[tmp,setTmp]=useState(String(value));const ref=useRef();
+  useEffect(()=>{if(ed&&ref.current){ref.current.focus();ref.current.select()}},[ed]);
+  if(ed)return <input ref={ref} type="number" inputMode="decimal" value={tmp} onChange={e=>setTmp(e.target.value)}
+    onBlur={()=>{onSave(parseFloat(tmp)||0);setEd(false)}}
+    onKeyDown={e=>{if(e.key==="Enter"){onSave(parseFloat(tmp)||0);setEd(false)}if(e.key==="Escape")setEd(false)}}
+    className={`edit-input${large?" large":""}`} style={{color}} />;
+  return <span onClick={()=>{setTmp(String(value));setEd(true)}} className="editable"
+    style={{color,fontWeight:700,fontSize:large?"18px":"13px"}}>{prefix}{fmt(value)}{suffix}</span>;
+}
+
+function EditText({value,onSave,style={}}){
+  const[ed,setEd]=useState(false),[tmp,setTmp]=useState(value);const ref=useRef();
+  useEffect(()=>{if(ed&&ref.current){ref.current.focus();ref.current.select()}},[ed]);
+  if(ed)return <input ref={ref} value={tmp} onChange={e=>setTmp(e.target.value)}
+    onBlur={()=>{onSave(tmp);setEd(false)}}
+    onKeyDown={e=>{if(e.key==="Enter"){onSave(tmp);setEd(false)}if(e.key==="Escape")setEd(false)}}
+    className="edit-input text" style={{...style}} />;
+  return <span onClick={()=>{setTmp(value);setEd(true)}} className="editable" style={{...style}}>{value}</span>;
+}
+
+function App(){
+  const[data,setData]=useState(()=>load()||DEFAULTS);
+  const[tab,setTab]=useState("dash");
+  const[wd,setWd]=useState(true);
+  const[gymDay,setGymDay]=useState(0);
+  const timer=useRef();
+
+  function up(fn){
+    setData(prev=>{const next=fn({...prev,income:[...prev.income],expenses:[...prev.expenses],debts:prev.debts.map(d=>({...d})),cash:{...prev.cash},checks:{...prev.checks}});
+      if(timer.current)clearTimeout(timer.current);
+      timer.current=setTimeout(()=>persist(next),300);
+      return next;
+    });
+  }
+
+  const totI=data.income.reduce((s,i)=>s+i.amount,0);
+  const totE=data.expenses.reduce((s,e)=>s+e.amount,0);
+  const surplus=totI-totE;
+  const totD=data.debts.reduce((s,d)=>s+d.balance,0);
+  const payoff=sim(data.debts,Math.max(surplus,0));
+  const dfm=payoff.find(m=>m.rem===0)?.mo||"24+";
+
+  const tabs=[
+    {id:"dash",icon:"◉",label:"Dashboard"},
+    {id:"income",icon:"↑",label:"Income"},
+    {id:"expenses",icon:"↓",label:"Expenses"},
+    {id:"debt",icon:"⊘",label:"Debt"},
+    {id:"gym",icon:"⬡",label:"Gym"},
+    {id:"schedule",icon:"◷",label:"Schedule"},
+    {id:"sprint",icon:"▶",label:"Sprint"},
+  ];
+
+  return <>
+    <div className="header">
+      <div style={{fontSize:10,letterSpacing:3,color:"var(--purple)",marginBottom:4}}>LIFE PLAN</div>
+      <div style={{fontSize:22,fontWeight:800,color:"var(--t1)"}}>Command Center</div>
+      <div style={{fontSize:11,color:"var(--t5)",marginTop:4}}>Tap any number to edit — saves automatically</div>
+    </div>
+
+    <div className="tabs">
+      {tabs.map(t=><button key={t.id} className={`tab${tab===t.id?" active":""}`} onClick={()=>setTab(t.id)}>
+        <div className="tab-icon">{t.icon}</div>{t.label}
+      </button>)}
+    </div>
+
+    <div className="content">
+
+      {tab==="dash"&&<>
+        <div className="metric-grid">
+          <div className="metric"><div className="metric-label">INCOME</div><div className="metric-val" style={{color:"var(--green)"}}>${fmt(totI)}<span className="metric-sub"> /mo</span></div></div>
+          <div className="metric"><div className="metric-label">EXPENSES</div><div className="metric-val" style={{color:"var(--orange)"}}>${fmt(totE)}<span className="metric-sub"> /mo</span></div></div>
+          <div className="metric"><div className="metric-label">SURPLUS</div><div className="metric-val" style={{color:surplus>=0?"var(--purple)":"var(--red)"}}>${fmt(surplus)}<span className="metric-sub"> /mo</span></div></div>
+          <div className="metric"><div className="metric-label">TOTAL DEBT</div><div className="metric-val" style={{color:"var(--red)"}}>${fmt(totD)}<span className="metric-sub"> {data.debts.length} cards</span></div></div>
+        </div>
+
+        <div className="panel">
+          <div style={{fontSize:11,color:"var(--t4)",letterSpacing:1,marginBottom:10}}>DEBT-FREE COUNTDOWN</div>
+          <div style={{display:"flex",alignItems:"baseline",gap:8,marginBottom:12}}>
+            <span style={{fontSize:36,fontWeight:800,color:dfm==="24+"?"var(--red)":"var(--green)"}}>{dfm}</span>
+            <span style={{fontSize:14,color:"var(--t4)"}}>months</span>
+          </div>
+          {payoff.length>0&&<div className="bar-chart">
+            {payoff.slice(0,18).map((m,i)=><div key={i} className="bar" style={{flex:1,background:m.rem===0?"var(--green)":"var(--purple)",height:`${Math.max(8,100-m.pct)}%`,opacity:m.rem===0?1:.6}}/>)}
+          </div>}
+          <div style={{display:"flex",justifyContent:"space-between",fontSize:10,color:"var(--t5)",marginTop:4}}>
+            <span>Now</span><span>{payoff.length>12?"18 mo":"12 mo"}</span>
+          </div>
+        </div>
+
+        <div className="panel">
+          <div style={{fontSize:11,color:"var(--t4)",letterSpacing:1,marginBottom:12}}>TIER PROGRESS</div>
+          {TIERS.map((t,i)=>{const pct=Math.min(100,(totI/t.mo)*100);const active=totI>=t.mo;return(
+            <div key={i} className="tier-row">
+              <div className="tier-label">
+                <span style={{color:active?t.color:"var(--t5)",fontWeight:active?700:400}}>{active?"✓ ":""}{t.label}/yr</span>
+                <span style={{color:"var(--t4)"}}>${fmt(t.mo)}/mo</span>
+              </div>
+              <div className="tier-track"><div className="tier-fill" style={{width:`${pct}%`,background:t.color}}/></div>
+            </div>
+          )})}
+        </div>
+
+        <div className="panel">
+          <div style={{fontSize:11,color:"var(--t4)",letterSpacing:1,marginBottom:10}}>CASH POSITIONS</div>
+          <div className="row"><span className="row-label">Checking</span>
+            <EditNum value={data.cash.checking} prefix="$" onSave={v=>up(d=>{d.cash.checking=v;return d})} /></div>
+          <div className="row"><span className="row-label">IRA (don't touch)</span>
+            <EditNum value={data.cash.ira} prefix="$" onSave={v=>up(d=>{d.cash.ira=v;return d})} /></div>
+          <div style={{borderTop:"1px solid var(--s2)",marginTop:8,paddingTop:8}} className="row">
+            <span className="row-label">Liquid cash</span>
+            <span style={{fontWeight:700,color:"var(--t1)"}}>${fmt(data.cash.checking)}</span>
+          </div>
+        </div>
+
+        <div className="panel">
+          <div style={{fontSize:11,color:"var(--t4)",letterSpacing:1,marginBottom:10}}>ANNUAL PROJECTION</div>
+          <div className="row"><span className="row-label">Monthly × 12</span><span style={{color:"var(--green)"}}>${fmt(totI*12)}</span></div>
+          <div className="row"><span className="row-label">+ Bonus paychecks</span><span style={{color:"var(--green)"}}>+${fmt(data.bonus*data.bonusCount)}</span></div>
+          <div style={{borderTop:"1px solid var(--s2)",marginTop:8,paddingTop:8}} className="row">
+            <span style={{fontWeight:700,color:"var(--t1)"}}>Total take-home</span>
+            <span style={{fontWeight:700,color:"var(--green)"}}>${fmt(totI*12+data.bonus*data.bonusCount)}/yr</span>
+          </div>
+        </div>
+      </>}
+
+      {tab==="income"&&<>
+        <div className="section-head"><div className="section-title">Income Sources</div><div className="section-sub">Tap any amount to edit</div></div>
+        {data.income.map((item,i)=>(
+          <div key={item.id} className="panel" style={{display:"flex",justifyContent:"space-between",alignItems:"center"}}>
+            <EditText value={item.name} onSave={v=>up(d=>{d.income[i].name=v;return d})} style={{fontSize:14,fontWeight:600,color:"var(--t2)"}} />
+            <div style={{display:"flex",alignItems:"center",gap:10}}>
+              <EditNum value={item.amount} prefix="$" suffix="/mo" onSave={v=>up(d=>{d.income[i].amount=v;return d})} color="var(--green)" />
+              {data.income.length>1&&<button className="remove-btn" onClick={()=>up(d=>{d.income.splice(i,1);return d})}>✕</button>}
+            </div>
+          </div>
+        ))}
+        <button className="add-btn" onClick={()=>up(d=>{d.income.push({id:`i${Date.now()}`,name:"New Source",amount:0});return d})}>+ Add income source</button>
+        <div className="total-bar"><span className="total-label">Total Monthly Income</span><span className="total-val" style={{color:"var(--green)"}}>${fmt(totI)}</span></div>
+      </>}
+
+      {tab==="expenses"&&<>
+        <div className="section-head"><div className="section-title">Monthly Expenses</div><div className="section-sub">Tap any amount to edit</div></div>
+        {data.expenses.map((item,i)=>(
+          <div key={item.id} className="panel">
+            <div style={{display:"flex",justifyContent:"space-between",alignItems:"center"}}>
+              <div>
+                <EditText value={item.name} onSave={v=>up(d=>{d.expenses[i].name=v;return d})} style={{fontSize:14,fontWeight:600,color:"var(--t2)"}} />
+                {item.flag==="eliminate"&&<div className="flag">⚠ ELIMINATE THIS</div>}
+              </div>
+              <div style={{display:"flex",alignItems:"center",gap:10}}>
+                <EditNum value={item.amount} prefix="$" suffix="/mo" onSave={v=>up(d=>{d.expenses[i].amount=v;return d})} color="var(--orange)" />
+                <button className="remove-btn" onClick={()=>up(d=>{d.expenses.splice(i,1);return d})}>✕</button>
+              </div>
+            </div>
+          </div>
+        ))}
+        <button className="add-btn" onClick={()=>up(d=>{d.expenses.push({id:`e${Date.now()}`,name:"New Expense",amount:0});return d})}>+ Add expense</button>
+        <div className="total-bar"><span className="total-label">Total Monthly Expenses</span><span className="total-val" style={{color:"var(--orange)"}}>${fmt(totE)}</span></div>
+        <div className="total-bar" style={{marginTop:8}}><span className="total-label">Monthly Surplus</span><span className="total-val" style={{color:surplus>=0?"var(--purple)":"var(--red)"}}>${fmt(surplus)}</span></div>
+      </>}
+
+      {tab==="debt"&&<>
+        <div className="section-head"><div className="section-title">Debt Kill Order</div><div className="section-sub">Update balances as you pay down. Reorder priority.</div></div>
+        {data.debts.sort((a,b)=>a.priority-b.priority).map((card,i)=>(
+          <div key={card.id} className="panel debt-card" style={{borderLeftColor:i<2?"var(--green)":i<4?"var(--yellow)":"var(--orange)"}}>
+            <div style={{display:"flex",justifyContent:"space-between",alignItems:"flex-start",marginBottom:8}}>
+              <div>
+                <div style={{fontSize:10,color:"var(--purple)",letterSpacing:1}}>KILL #{card.priority}</div>
+                <EditText value={card.name} onSave={v=>up(d=>{d.debts.find(x=>x.id===card.id).name=v;return d})} style={{fontSize:14,fontWeight:700,color:"var(--t1)"}} />
+                <div style={{fontSize:11,color:"var(--t5)"}}>...{card.last4}</div>
+              </div>
+              <EditNum value={card.balance} prefix="$" onSave={v=>up(d=>{d.debts.find(x=>x.id===card.id).balance=v;return d})} color="var(--red)" large />
+            </div>
+            <div style={{display:"flex",gap:16,fontSize:12,flexWrap:"wrap"}}>
+              <div style={{display:"flex",alignItems:"center",gap:4}}>
+                <span style={{color:"var(--t4)"}}>APR:</span>
+                <EditNum value={card.apr} suffix="%" onSave={v=>up(d=>{d.debts.find(x=>x.id===card.id).apr=v;return d})} color="var(--yellow)" />
+              </div>
+              <div style={{display:"flex",alignItems:"center",gap:4}}>
+                <span style={{color:"var(--t4)"}}>Min:</span>
+                <EditNum value={card.minPay} prefix="$" onSave={v=>up(d=>{d.debts.find(x=>x.id===card.id).minPay=v;return d})} color="var(--t3)" />
+              </div>
+              <div style={{display:"flex",alignItems:"center",gap:4}}>
+                {card.priority>1&&<button className="priority-btn" onClick={()=>up(d=>{const c=d.debts.find(x=>x.id===card.id);const p=d.debts.find(x=>x.priority===c.priority-1);if(p){p.priority++;c.priority--}return d})}>▲</button>}
+                {card.priority<data.debts.length&&<button className="priority-btn" onClick={()=>up(d=>{const c=d.debts.find(x=>x.id===card.id);const n=d.debts.find(x=>x.priority===c.priority+1);if(n){n.priority--;c.priority++}return d})}>▼</button>}
+              </div>
+            </div>
+          </div>
+        ))}
+        <div className="total-bar"><span className="total-label">Total Debt</span><span className="total-val" style={{color:"var(--red)"}}>${fmt(totD)}</span></div>
+
+        <div className="panel" style={{marginTop:12}}>
+          <div style={{fontSize:11,color:"var(--t4)",letterSpacing:1,marginBottom:8}}>PAYOFF PROJECTION</div>
+          <div style={{display:"flex",alignItems:"baseline",gap:6,marginBottom:10}}>
+            <span style={{fontSize:28,fontWeight:800,color:"var(--green)"}}>{dfm}</span>
+            <span style={{fontSize:12,color:"var(--t4)"}}>months to $0</span>
+            <span style={{fontSize:12,color:"var(--t5)"}}>@ ${fmt(surplus)}/mo</span>
+          </div>
+          <div className="bar-chart" style={{height:40}}>
+            {payoff.slice(0,18).map((m,i)=><div key={i} className="bar" style={{flex:1,background:m.rem===0?"var(--green)":`hsl(${270+i*3},70%,55%)`,height:`${Math.max(6,100-m.pct)}%`,opacity:m.rem===0?1:.7}}/>)}
+          </div>
+          <div style={{marginTop:12}}>
+            {payoff.filter(m=>m.mo<=(typeof dfm==="number"?dfm:18)).map((m,i)=>(
+              <div key={i} style={{display:"flex",justifyContent:"space-between",fontSize:11,padding:"3px 0",borderBottom:"1px solid #18181b"}}>
+                <span style={{color:"var(--t4)"}}>Month {m.mo}</span>
+                <span style={{color:m.rem===0?"var(--green)":"var(--t3)",fontWeight:m.rem===0?700:400}}>
+                  {m.rem===0?"DEBT FREE ✓":`$${fmt(m.rem)} remaining`}
+                </span>
+              </div>
+            ))}
+          </div>
+        </div>
+      </>}
+
+      {tab==="gym"&&<>
+        <div className="section-head"><div className="section-title">Gym — Chico Dan Split</div><div className="section-sub">PPL A/B rotation • Tap exercises to log completion</div></div>
+
+        <div className="panel" style={{borderLeft:"3px solid var(--green)"}}>
+          <div style={{display:"flex",gap:16,fontSize:12}}>
+            <div><span style={{color:"var(--t4)"}}>Warm-up:</span> <span style={{color:"var(--green)"}}>{GYM.info.warmup}</span></div>
+          </div>
+          <div style={{display:"flex",gap:16,fontSize:12,marginTop:4}}>
+            <div><span style={{color:"var(--t4)"}}>Working:</span> <span style={{color:"var(--green)"}}>{GYM.info.working}</span></div>
+          </div>
+          <div style={{display:"flex",gap:16,fontSize:12,marginTop:4}}>
+            <div><span style={{color:"var(--t4)"}}>Rest:</span> <span style={{color:"var(--yellow)"}}>{GYM.info.rest}</span></div>
+          </div>
+        </div>
+
+        <div style={{display:"flex",gap:4,marginBottom:16,overflowX:"auto",paddingBottom:4}}>
+          {GYM.days.map((d,i)=>(
+            <button key={d.id} onClick={()=>setGymDay(i)} style={{
+              padding:"8px 10px",borderRadius:6,cursor:"pointer",fontSize:11,fontWeight:700,fontFamily:"inherit",
+              whiteSpace:"nowrap",minWidth:"fit-content",transition:"all .15s",
+              background:gymDay===i?d.color+"20":"transparent",
+              border:gymDay===i?`1px solid ${d.color}`:"1px solid var(--s2)",
+              color:gymDay===i?d.color:"var(--t5)",
+            }}>{d.label}</button>
+          ))}
+        </div>
+
+        {(()=>{const day=GYM.days[gymDay];return(
+          <div>
+            <div style={{display:"flex",alignItems:"center",gap:8,marginBottom:14}}>
+              <div style={{width:4,height:24,borderRadius:2,background:day.color}}/>
+              <div style={{fontSize:16,fontWeight:800,color:"var(--t1)"}}>{day.label}</div>
+            </div>
+            {day.groups.map((g,gi)=>(
+              <div key={gi} className="panel" style={{borderLeft:`3px solid ${day.color}40`}}>
+                <div style={{fontSize:10,letterSpacing:2,color:day.color,marginBottom:10,textTransform:"uppercase",fontWeight:700}}>{g.muscle}</div>
+                {g.exercises.map((ex,ei)=>{
+                  const k=`gym-${day.id}-${gi}-${ei}`;
+                  const ch=data.checks[k]||false;
+                  return(
+                    <div key={ei} onClick={()=>up(d=>{d.checks[k]=!ch;return d})}
+                      style={{display:"flex",gap:10,padding:"9px 0",cursor:"pointer",
+                        borderBottom:ei<g.exercises.length-1?"1px solid #27272a":"none",
+                        opacity:ch?.45:1,transition:"opacity .2s"}}>
+                      <div style={{
+                        width:20,height:20,borderRadius:5,flexShrink:0,
+                        border:ch?`2px solid ${day.color}`:"2px solid var(--s3)",
+                        background:ch?day.color+"25":"transparent",
+                        display:"flex",alignItems:"center",justifyContent:"center",
+                        fontSize:11,color:day.color,fontWeight:700,
+                      }}>{ch?"✓":""}</div>
+                      <div>
+                        <div style={{fontSize:13,color:ch?"var(--t5)":"var(--t2)",fontWeight:600,
+                          textDecoration:ch?"line-through":"none",lineHeight:1.4}}>{ex}</div>
+                        <div style={{fontSize:10,color:"var(--t5)",marginTop:2}}>
+                          {GYM.info.warmup} warm-up → {GYM.info.working} working
+                        </div>
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            ))}
+            <div className="panel" style={{background:"transparent",border:"1px dashed var(--s2)",textAlign:"center"}}>
+              <div style={{fontSize:11,color:"var(--t4)"}}>
+                {day.groups.reduce((s,g)=>s+g.exercises.length,0)} exercises •
+                ~{day.groups.reduce((s,g)=>s+g.exercises.length,0) * 3} working sets •
+                ~{Math.round(day.groups.reduce((s,g)=>s+g.exercises.length,0) * 3 * 2.25)} min est.
+              </div>
+            </div>
+            <button className="reset-btn" onClick={()=>up(d=>{
+              Object.keys(d.checks).filter(k=>k.startsWith(`gym-${day.id}`)).forEach(k=>delete d.checks[k]);
+              return d;
+            })}>Reset {day.label} checkmarks</button>
+          </div>
+        );})()}
+
+        <div className="panel" style={{marginTop:12}}>
+          <div style={{fontSize:11,color:"var(--t4)",letterSpacing:1,marginBottom:10}}>WEEKLY ROTATION</div>
+          {[
+            {day:"Monday",workout:"Push A",color:"#ef4444"},
+            {day:"Tuesday",workout:"Pull A",color:"#60a5fa"},
+            {day:"Wednesday",workout:"Rest / Business",color:"var(--t5)"},
+            {day:"Thursday",workout:"Legs A",color:"#4ade80"},
+            {day:"Friday",workout:"Push B",color:"#f97316"},
+            {day:"Saturday",workout:"Pull B",color:"#a78bfa"},
+            {day:"Sunday",workout:"Legs B",color:"#facc15"},
+          ].map((r,i)=>(
+            <div key={i} style={{display:"flex",justifyContent:"space-between",padding:"8px 0",
+              borderBottom:i<6?"1px solid #27272a":"none",fontSize:12}}>
+              <span style={{color:"var(--t3)"}}>{r.day}</span>
+              <span style={{color:r.color,fontWeight:600}}>{r.workout}</span>
+            </div>
+          ))}
+          <div style={{marginTop:10,fontSize:10,color:"var(--t5)",lineHeight:1.6}}>
+            A/B split means you cycle through two variations. Week 1: Push A → Pull A → Legs A → Push B → Pull B → Legs B. Week 2: same rotation continues. Every muscle gets hit with different angles and volume.
+          </div>
+        </div>
+      </>}
+
+      {tab==="schedule"&&<>
+        <div className="section-head"><div className="section-title">Daily Operating System</div><div className="section-sub">Protect these blocks</div></div>
+        <div className="toggle-row">
+          <button className={`toggle-btn${wd?" active":""}`} onClick={()=>setWd(true)}>Weekday</button>
+          <button className={`toggle-btn${!wd?" active":""}`} onClick={()=>setWd(false)}>Weekend</button>
+        </div>
+        {(wd?WD:WE).map((s,i)=>{const c=SC[s.c];return(
+          <div key={i} className="sched-row">
+            <div className="sched-time">{s.t}</div>
+            <div className="sched-block" style={{background:c.bg,borderColor:c.bd,color:c.tx}}>{s.a}</div>
+          </div>
+        )})}
+        <div className="panel" style={{marginTop:12}}>
+          <div style={{fontSize:11,color:"var(--t4)",letterSpacing:1,marginBottom:8}}>WEEKLY HOURS</div>
+          <div className="row"><span className="row-label">W2 Job</span><span style={{color:"var(--blue)"}}>~42.5 hrs</span></div>
+          <div className="row"><span className="row-label">Business (weekday)</span><span style={{color:"var(--orange)"}}>~15 hrs</span></div>
+          <div className="row"><span className="row-label">Business (weekend)</span><span style={{color:"var(--orange)"}}>~13 hrs</span></div>
+          <div className="row"><span className="row-label">Gym</span><span style={{color:"var(--green)"}}>~5 hrs</span></div>
+          <div style={{borderTop:"1px solid var(--s2)",marginTop:6,paddingTop:6}} className="row">
+            <span style={{fontWeight:700,color:"var(--t1)"}}>Productive total</span>
+            <span style={{fontWeight:700,color:"var(--purple)"}}>~75.5 hrs/wk</span>
+          </div>
+        </div>
+      </>}
+
+      {tab==="sprint"&&<>
+        <div className="section-head"><div className="section-title">90-Day Sprint</div><div className="section-sub">Check off tasks as you complete them</div></div>
+        {SPRINTS.map((week,wi)=>(
+          <div key={wi} className="panel" style={{borderLeft:`3px solid ${week.color}`}}>
+            <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:10}}>
+              <div style={{fontSize:13,fontWeight:700,color:"var(--t1)"}}>{week.week}</div>
+              <div style={{fontSize:9,fontWeight:700,color:week.color,background:week.color+"18",padding:"3px 8px",borderRadius:4,letterSpacing:1}}>{week.label}</div>
+            </div>
+            {week.tasks.map((task,ti)=>{const k=`${wi}-${ti}`;const ch=data.checks[k]||false;return(
+              <div key={ti} className="check-item" style={{opacity:ch?.5:1,borderBottom:ti<week.tasks.length-1?"1px solid #18181b":"none"}}
+                onClick={()=>up(d=>{d.checks[k]=!ch;return d})}>
+                <div className={`checkbox${ch?" checked":""}`}>{ch?"✓":""}</div>
+                <span className={`check-text${ch?" done":""}`}>{task}</span>
+              </div>
+            )})}
+            <div style={{marginTop:8,fontSize:10,color:"var(--t5)"}}>
+              {week.tasks.filter((_,ti)=>data.checks[`${wi}-${ti}`]).length}/{week.tasks.length} complete
+            </div>
+          </div>
+        ))}
+        {(()=>{
+          const total=SPRINTS.reduce((s,w)=>s+w.tasks.length,0);
+          const done=Object.values(data.checks).filter(Boolean).length;
+          const pct=Math.round((done/total)*100);
+          return <div className="panel">
+            <div style={{fontSize:11,color:"var(--t4)",letterSpacing:1,marginBottom:8}}>OVERALL PROGRESS</div>
+            <div style={{display:"flex",alignItems:"baseline",gap:6,marginBottom:8}}>
+              <span style={{fontSize:28,fontWeight:800,color:"var(--purple)"}}>{pct}%</span>
+              <span style={{fontSize:12,color:"var(--t4)"}}>{done}/{total} tasks</span>
+            </div>
+            <div style={{background:"var(--s1)",borderRadius:4,height:8,overflow:"hidden"}}>
+              <div style={{width:`${pct}%`,height:"100%",background:"linear-gradient(to right,var(--purple),var(--green))",borderRadius:4,transition:"width .3s"}}/>
+            </div>
+          </div>;
+        })()}
+        <button className="reset-btn" onClick={()=>up(d=>{d.checks={};return d})}>Reset all checkmarks</button>
+      </>}
+
+      <div className="spacer"/>
+    </div>
+  </>;
+}
+
+ReactDOM.createRoot(document.getElementById("app")).render(<App/>);
+</script>
+</body>
+</html>
